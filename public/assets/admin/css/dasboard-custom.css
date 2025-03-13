@@ -1,0 +1,50 @@
+.rating {
+  display: inline-block;
+}
+
+.rating input {
+  display: none;
+}
+
+.rating label {
+  cursor: pointer;
+  width: 50px; /* lebar bintang */
+  height: 50px; /* tinggi bintang */
+  margin: 0;
+  padding: 0;
+  float: right;
+  background: url('https://cdn-icons-png.flaticon.com/512/566/566000.png');
+  background-size: contain; /* untuk memastikan gambar bintang sesuai ukuran label */
+  pointer-events: none; /* Disable pointer events */
+}
+
+.rating label:before {
+  content: "\2605";
+  font-size: 35px;
+  color: #ccc;
+  position: absolute;
+  padding-top: 4px;
+}
+
+.rating input:checked ~ label:before {
+  color: rgb(255, 216, 44);
+}
+
+/* responsive */
+@media screen and (max-width: 1024px) {
+  .row .col-xl-4.order-custom {
+      order: 2;
+  }
+}
+
+@media screen and (max-width: 320px) {
+  .rating label {
+      width: 30px; /* lebar bintang untuk 320px */
+      height: 30px; /* tinggi bintang untuk 320px */
+  }
+
+  .rating label:before {
+      font-size: 20px; /* ukuran font bintang untuk 320px */
+      padding-top: 2px;
+  }
+}

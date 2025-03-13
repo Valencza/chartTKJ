@@ -1,0 +1,648 @@
+    .navbar {
+      background-color: white;
+      margin: 0 auto;
+      width: 90%;
+      border-radius: 50px;
+      padding: 12px 20px;
+      box-shadow: 0 4px 14px rgba(69, 69, 69, 0.1);
+    }
+    
+    .navbar-nav .nav-link {
+      color: #555;
+      transition: color 0.3s ease;
+      padding: 10px 15px;
+      border-radius: 25px;
+      color: #555;
+      font-weight: 600;
+      font-size: 17px;
+    }
+  
+    
+    .navbar-nav .nav-link.active {
+      color: #007bff !important;
+      font-weight: 600;
+    }
+    
+    .nav-link {
+      position: relative;
+      display: inline-block;
+      text-decoration: none;
+      color: inherit;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .custom .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -3px;
+      left: 50%;
+      width: 0;
+      height: 3px;
+      background-color: #007bff;
+      transform: translateX(-50%);
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover {
+      color: #007bff;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    
+    .navbar-nav .dropdown-menu {
+      background-color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 10px 0;
+      min-width: 200px;
+    }
+    
+    .navbar-nav .dropdown-menu .dropdown-item {
+      color: #7e7e7e;
+      padding: 10px 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-weight: 500;
+    }
+    
+    .navbar-nav .dropdown-menu .dropdown-item:hover {
+      background-color: #0d83fd;
+      color: #fff;
+    }
+    
+    nav.navbar .container .button-masuk button,
+    nav.navbar .container .button-masuk .btn-1,
+    nav.navbar .container .button-masuk .btn-2 {
+      font-weight: 600;
+      letter-spacing: 2px;
+      padding: 12px 30px;
+      border-radius: 30px;
+    }
+    
+    nav.navbar .container .button-masuk {
+      margin-right: 10px;
+    }
+    
+    nav.navbar .container .button-masuk .btn-1,
+    nav.navbar .container .button-masuk .btn-2 {
+      padding: 10px 28px;
+      font-size: 16px;
+      line-height: 1.5;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    nav.navbar .container .button-masuk .btn-1 {
+      border: none;
+      background-color: #0d83fd;
+      box-shadow: none;
+    }
+    
+    nav.navbar .container .button-masuk .btn-1:hover {
+      background-color: #0073ee;
+    }
+    
+    .navbar .container .button-masuk .btn-2 {
+      border: 2.5px solid;
+      border-radius: 30px;
+    }
+    
+    .navbar-brand img {
+      content: url('../img/LOGO.svg');
+    }
+  
+    /* Navbar End */
+  
+    /* Hero start */
+    p.desc {
+      width: auto;
+    }
+  
+    /* Hero End */
+   
+    /* LAYANAN START */
+    .Layanan-kami .container h1{
+      font-family: 'Poppins';
+      font-weight: 700;
+    }
+    
+    .carousel-item .Layanan-item h5{
+      font-family: 'Poppins';
+      font-weight: 700;
+    }
+    .Layanan-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+    }
+    .Layanan-item img {
+      max-height: 250px; 
+      width: auto;
+      object-fit: contain;
+      margin: 0 auto;
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .carousel-item .row.g-4 {
+        justify-content: center; 
+      }
+      .carousel-item .col-lg-4 {
+        max-width: 100%; 
+      }
+      .Layanan-item {
+        text-align: center; 
+      }
+    }
+    /* LAYANAN END */
+  
+    /* CTA START */
+    .call-to-action .row .col-lg-6 {
+      text-align: left; 
+    }
+  
+    @media (max-width: 768px) {
+      .call-to-action .row .col-lg-6 {
+        margin-top: 40px;
+        text-align: center; 
+      }
+    }
+  
+    /* CTA END */
+  
+    /* Ulasan Start */
+    .carousel-control-prev, .carousel-control-next {
+      width: 50px;
+      height: 50px;
+      background-color: #0b7ffb;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      position: absolute;
+      top: 40%;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.3s ease;
+      will-change: transform;
+    }
+    
+    .carousel-control-prev:hover, .carousel-control-next:hover {
+      background-color: #0000003d;
+      transform: scale(1.1);
+    }
+    
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+      color: #005bb5;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+    }
+    
+    .carousel-control-prev-icon::before, .carousel-control-next-icon::before {
+      font-size: 16px;
+    }  
+    /* Ulasan End */
+  
+    /* kontak start */
+    .contact .card{
+      background-color: white;
+      border: none;
+      box-shadow: 0 4px 10px rgba(91, 91, 91, 0.1); 
+    }
+    .info-box {
+      background-color: #007bff; 
+      border-radius: 15px;
+      padding: 50px; 
+      box-shadow: 0 4px 6px rgba(59, 59, 59, 0.218); 
+    }
+  
+    .info-item .icon-box,
+    .info-item .icon-box i {
+      color: rgb(255, 255, 255);
+    }
+  
+    .info-item .content h4 {
+      color: white; 
+    }
+  
+    .info-item .content p {
+      color: #f8f9fa; 
+    }
+  
+    .contact .container .info-box{
+      padding: 2.8rem;
+    }
+    
+    @media screen and (max-width:320px){
+      .contact .container .info-box{
+        padding: 2rem 1.1rem;
+      }
+      .contact .container .contact-form{
+        padding: 1.5rem 0.1rem;
+      }
+    } 
+    /* kontak end */
+  
+    /* Rating Form Start */
+    .rating {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+  
+    .rating input[type="radio"] {
+      display: none;
+    }
+  
+    .rating label.star {
+      font-size: 2.5rem; 
+      color: #ddd;
+      cursor: pointer;
+      transition: color 0.3s;
+      margin: 0 5px;
+    }
+  
+    .rating input[type="radio"]:checked ~ label.star {
+      color: #ffcc00; 
+    }
+  
+    .rating input[type="radio"]:hover ~ label.star,
+    .rating input[type="radio"]:checked ~ label.star:hover {
+      color: #ffcc00;
+    }
+  
+    .rating input[type="radio"]:hover ~ label.star {
+      color: #f1c40f; 
+    }
+  
+    .rating-label {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    /* Rating Form End */  
+
+  /* landing page style */
+
+
+  /* profile start */
+  .profile img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    object-position: top;
+  }
+  a.dropdown-item {
+    font-weight: 400;
+  }
+  a.dropdown-item:hover {
+    color: #007bff;
+    background-color: #eaf7ff;
+    border-radius: 10px;
+  }
+  .dropdown .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 15px rgba(67, 67, 67, 0.2);
+    border-radius: 10px;
+  }
+  @media (min-width: 992px) {
+    .navbar-collapse {
+      flex-grow: 1;
+    }
+    .navbar-nav .custom {
+      order: 2;
+      flex-grow: 1;
+    }
+
+    .profile {
+      order: 3;
+    }
+  }
+
+  /* profile end */
+
+  /* breadcrumbs start */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+  }
+  /* breadcrumbs end */
+
+  /* tab produk start */
+  .tab .container .about-title{
+    font-weight: 700;
+    font-family: 'Poppins';
+    line-height: 45px;
+    margin-top: -30px;
+  }
+  .tab-pane .card h5{
+    font-family: 'Poppins';
+    font-weight: 600;
+  }
+  .tab-pane .card h6{
+    font-family: 'Poppins';
+    font-weight: 600;
+  }
+  .nav-pills::-webkit-scrollbar {
+    height: 7px; 
+  }
+
+  .nav-pills::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 100px; 
+  }
+
+  .nav-pills::-webkit-scrollbar-track {
+    background: #e6e6e6; 
+    border-radius: 100px;
+  }
+  
+
+  /* card pembelian */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    height: 100%; 
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  .icon-detail-link {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2; 
+    text-decoration: none;
+  }
+
+  .icon-detail {
+    background-color: white;
+    border-radius: 50%; 
+    padding: 7px 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+  }
+
+  .icon-detail i {
+    color: #000; 
+    font-size: 1.5rem; 
+  }
+
+  .tab-pane .card img {
+    margin: auto;
+    object-fit: cover;
+    width: 100%;
+    height: 200px;
+  }
+
+  .card-body {
+    flex-grow: 1; 
+  }
+
+  .col.mb-3 {
+    flex-grow: 1; 
+  }
+  .Rating, .fs-5, .btn {
+    margin-top: auto; 
+  }
+  /* tab produk end */
+  
+  /* produk style */
+
+  /* detail-produk style */
+  
+  .rating-barang .container {
+      overflow: visible !important;
+  }
+  .rating-barang .card {
+      overflow: visible !important;
+  }
+  .rating-barang {
+    transform: none !important;
+  }
+  .dropdown-menu {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(62, 62, 62, 0.08);
+    border: none;
+}
+
+  #keranjangButton {
+    display: flex;
+    align-items: center; /* Menjaga elemen-elemen sejajar secara vertikal */
+  }
+  .spinner {
+    border: 4px solid #f3f3f3;  /* Background color of the spinner */
+    border-top: 4px solid #3498db;  /* The spinner's color */
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    animation: spin 2s linear infinite;  /* Animation to rotate the spinner */
+    margin-left: 8px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+ 
+  .star {
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .star.hover {
+    color: #ffcc00; /* Warna saat hover */
+  }
+
+  .swal2-confirm {
+    background-color: #007bff !important;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+  }
+  
+  .detail-produk{
+    margin-top: -65px;
+  }
+
+  
+
+  .detail-produk .card h4{
+    font-weight: 600;
+    font-family: 'Poppins';
+  }
+  .detail-produk .card p{
+    line-height: 27px;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .card {
+    border: none; 
+    box-shadow: 0 0px 12px rgba(32, 31, 31, 0.048); 
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  /* Styling input quantity */
+  input[type="number"] {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    max-width: 50px;
+  }
+  .detail-produk .container .button-card button{
+    padding: 15px 30px;
+  }
+  .detail-produk .container .button-card button:nth-child(1){
+    font-weight: 600;
+  }
+  .detail-produk .container .button-card button:nth-child(2){
+    font-weight: 600;
+  }
+  .rating-barang .container h5{
+    font-family: 'Poppins';
+    font-weight: 600;
+  }
+  .rating-barang{
+    margin-top: -60px;
+  }
+  .rating-barang .container h1{
+    font-family: 'Poppins';
+    font-weight: 600;
+  }
+  .rating-barang .container p.ulas{
+    font-weight: 500;
+  }
+
+  /* card pembelian */
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex-grow: 1;
+}
+
+  /* pagination */
+  #productCarousel .carousel-inner {
+    overflow: visible; /* Menampilkan shadow */
+  }
+
+  .carousel-item {
+    padding: 15px; /* Memberi jarak di sekitar card */
+  }
+
+  .card {
+    box-shadow: 0 4px 8px rgba(81, 81, 81, 0.104); /* Shadow */
+    border-radius: 10px; /* Opsional */
+  }
+
+
+
+  /* Tombol ditengahkan di ukuran mobile */
+@media (max-width: 576px) {
+  .button-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .button-card button {
+    width: 100%; 
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  
+  .detail-produk .d-flex.justify-content-between {
+    flex-direction: column; /* Kolom di HP */
+  }
+
+  .detail-produk .d-flex.justify-content-between > div {
+    margin-bottom: 8px; /* Spasi antar elemen */
+  }
+}
+  /* detail-produk style */
+
+
+  /* pagination */
+  
+
+  /* RESPONSIVE BREAKPOINTS */
+  @media (max-width: 1024px) {
+    .testimonials .row.g-4 .col-md-6:nth-child(3) {
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      justify-content: center;
+    }
+    .responsive-br {
+      display: none;
+    }
+    .about .about-title {
+      line-height: 5;
+    }
+    .collapse ul li a{
+      margin: 0 10px;
+    }
+  }
+  @media (max-width: 1024px) {
+      p.desc {
+          width: auto;
+      }
+      .about .about-title {
+        line-height: 2.8rem;
+        font-size: 1.8rem;
+      }
+  }
+
+  @media (max-width: 425px) {
+    .navbar-brand img {
+      content: url('../img/LOGO-ICON.svg');
+      margin-left: -10px;
+    }
+    .tab .row .container{
+      margin-top: -15px;
+    }
+  }
+  
+  @media (max-width: 425px) {
+    .navbar .container .button-masuk {
+      flex-direction: column;
+    }
+    .navbar .container .button-masuk a:nth-child(1) {
+      margin-bottom: 15px;
+    }
+  }
+  
+
+  @media (max-width: 768px) {
+    .illustration {
+      display: none;     
+  }
+  }
