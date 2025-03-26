@@ -1148,7 +1148,7 @@
                     window.snap.pay(data.token, {
                         onSuccess: function(result) {
                             alert("Pembayaran berhasil!");
-                            window.location.href = "{{ route('serviceLayanan.invoice', '') }}/" + result.order_id;
+                            window.location.href = "{{ route('service') }}";
                         },
                         onPending: function(result) {
                             alert("Pembayaran pending.");
