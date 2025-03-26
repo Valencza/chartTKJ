@@ -33,21 +33,23 @@
                             <tr>
                                 <th class="text-center px-3">No.</th>
                                 <th class="pe-3 min-w-150px">Nama</th>
+                                <th class="pe-3 min-w-150px">Harga</th>
                                 <th class="text-center pe-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="fw-semibold text-gray-700">
-                            @foreach ($jenisBarangList as $index => $jenisBarang)
+                            @foreach ($jenisLayananList as $index => $jenisLayanan)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
-                                <td>{{ $jenisBarang->nama }}</td>
+                                <td>{{ $jenisLayanan->nama }}</td>
+                                <td>Rp. {{ number_format($jenisLayanan->harga, 0, ',', '.') }}</td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn btn-outline btn-outline-primary btn-active-light-primary btn-sm btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" data-bs-target="#editKategoriModal" data-bs-toggle="modal">
                                         <i class="ki-duotone ki-pencil fs-2"></i>
                                     </button>
                                     <button class="btn btn-icon btn btn-outline btn-outline-danger btn-active-light-danger btn-sm"
                                         data-kt-permissions-table-filter="delete_row"
-                                        data-id="{{ $jenisBarang->id }}"
+                                        data-id="{{ $jenisLayanan->id }}"
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Hapus">
@@ -71,17 +73,26 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modalTambahKategoriLabel">Tambah Jenis Barang</h4>
+                <h4 class="modal-title" id="modalTambahKategoriLabel">Tambah Jasa Layanan</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route ('jenisBarang.store') }}" id="formTambahKategori" method="POST" enctype="multipart/form-data">
+                <form action="{{route ('jenisLayanan.store') }}" id="formTambahKategori" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     <!-- Nama Kategori -->
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Jenis Barang</label>
+                        <label for="nama" class="form-label">Jenis Layanan</label>
                         <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan Kategori" required>
+                    </div>
+
+                    <!-- Harga -->
+                    <div class="mb-3">
+                        <label class="form-label" for="harga">Harga</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Rp</span>
+                            <input type="number" class="form-control ps-2 count" name="harga" id="harga" placeholder="0" min="0" required>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -99,20 +110,26 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="editKategoriModalLabel">Edit Produk</h4>
+                <h4 class="modal-title" id="editKategoriModalLabel">Edit Jasa Layanan</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- Form Input untuk Edit Produk -->
-                @if (isset($jenisBarang) && $jenisBarang !== null)
-                <form action="{{ route('jenisBarang.update', ['id' => $jenisBarang->id ?? '']) }}" method="POST" id="editKategoriForm" enctype="multipart/form-data">
+                @if (isset($jenisLayanan) && $jenisLayanan !== null)
+                <form action="{{ route('jenisLayanan.update', ['id' => $jenisLayanan->id ?? '']) }}" method="POST" id="editKategoriForm" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Kategori Produk</label>
-                        <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama', $jenisBarang->nama) }}" required>
+                        <label for="nama" class="form-label">Jasa Layanan</label>
+                        <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama', $jenisLayanan->nama) }}" required>
                     </div>
+
+                    <div class="mb-3">
+                        <label for="harga" class="form-label">Harga</label>
+                        <input type="text" class="form-control" name="harga" id="harga" value="{{ old('harga', $jenisLayanan->harga) }}" required>
+                    </div>
+
 
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -138,7 +155,7 @@
         let form = document.getElementById("formTambahKategori");
         let formData = new FormData(form);
 
-        fetch("{{ route('jenisBarang.store') }}", {
+        fetch("{{ route('jenisLayanan.store') }}", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
@@ -274,7 +291,7 @@
         document.querySelectorAll('[data-kt-permissions-table-filter="delete_row"]').forEach(button => {
             button.addEventListener("click", function() {
                 // Ambil ID produk dari data-id
-                let jenisBarangId = button.getAttribute("data-id");
+                let jenisLayananId = button.getAttribute("data-id");
 
                 // Menampilkan SweetAlert untuk konfirmasi
                 Swal.fire({
@@ -294,7 +311,7 @@
                     if (result.isConfirmed) {
                         // Kirim request AJAX untuk menghapus data dan gambar
                         $.ajax({
-                            url: '/dashboard/jenis-barang/' + jenisBarangId, // Gantilah dengan route yang benar
+                            url: '/dashboard/jenis-layanan/' + jenisLayananId, // Gantilah dengan route yang benar
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Tambahkan header CSRF token
@@ -350,8 +367,5 @@
         });
     });
 </script>
-
-@endstack
-
 
 @endsection

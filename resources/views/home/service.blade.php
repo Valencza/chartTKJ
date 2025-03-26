@@ -3,6 +3,65 @@
 @section('content')
 
 <style>
+    .features-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .features-list li {
+        display: flex;
+        padding: 10px;
+    }
+
+    .features-list i {
+        margin-right: 10px;
+        /* Jarak antara ikon dan teks */
+        font-size: 1.2rem;
+    }
+
+    /* Mengatur layout teks dan harga */
+    .ker {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        /* Teks - Harga */
+        width: 100%;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .kerusakan {
+        flex-grow: 1;
+        min-width: 200px;
+        /* Mencegah teks terlalu panjang */
+        word-wrap: break-word;
+    }
+
+    .harga {
+        font-weight: bold;
+        white-space: nowrap;
+        /* Mencegah harga turun */
+        text-align: right;
+    }
+
+    /* Responsive untuk layar kecil */
+    @media (max-width: 470px) {
+        .features-list li {
+            display: flex;
+        }
+
+        .ker {
+            display: block;
+        }
+
+        .harga {
+            text-align: left;
+            margin-top: 5px;
+            display: block;
+        }
+    }
+
+
     .hero-servis .container i {
         font-size: 1.8rem;
     }
@@ -281,7 +340,7 @@
     }
 
     @media screen and (max-width: 470px) {
-        .features-list li {
+        .features-list.feature li {
             display: flex;
             flex-direction: column;
         }
@@ -502,26 +561,17 @@
 
                             <h4 style="font-weight: 600;">Jenis Kerusakan :</h4>
                             <ul class="features-list">
+                                @foreach ($jenisKerusakan as $kerusakan)
                                 <li>
-                                    <span><i class="bi bi-check-circle-fill"></i> LCD rusak / retak</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 150.000</strong>
+                                    <span><i class="bi bi-check-circle-fill"></i> {{ $kerusakan->nama }}</span>
+                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">
+                                        Rp {{ number_format($kerusakan->harga, 0, ',', '.') }}
+                                    </strong>
                                 </li>
-                                <li>
-                                    <span><i class="bi bi-check-circle-fill"></i> Baterai cepat habis</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 130.000</strong>
-                                </li>
-                                <li>
-                                    <span><i class="bi bi-check-circle-fill"></i> Speaker tidak berfungsi</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 120.000</strong>
-                                </li>
-                                <li>
-                                    <span><i class="bi bi-check-circle-fill"></i> Reparasi iPad</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 200.000</strong>
-                                </li>
+                                @endforeach
                             </ul>
                         </div>
-                        <a href="#" class="btn btn-light btn-block">
-                            Pesan Sekarang
+                        <a href="#" class="btn btn-light btn-block" data-bs-toggle="modal" data-bs-target="#barangModal">Selengkapnya
                             <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -541,26 +591,15 @@
 
                             <h4 style="font-weight: 600;">Jenis Layanan :</h4>
                             <ul class="features-list">
+                                @foreach ($jenisLayanan as $layanan)
                                 <li>
-                                    <span><i class="bi bi-check-circle-fill text-primary"></i> Instalasi WiFi / LAN</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 200.000</strong>
+                                    <span><i class="bi bi-check-circle-fill text-primary"></i>{{ $layanan->nama }}</span>
+                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</strong>
                                 </li>
-                                <li>
-                                    <span><i class="bi bi-check-circle-fill text-primary"></i> Install ulang Windows / macOS</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 180.000</strong>
-                                </li>
-                                <li>
-                                    <span><i class="bi bi-check-circle-fill text-primary"></i> Setting CCTV / Smart Home</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 250.000</strong>
-                                </li>
-                                <li>
-                                    <span><i class="bi bi-check-circle-fill text-primary"></i> Backup & Recovery Data</span>
-                                    <strong class="ps-4 ms-1 ps-md-0 ms-md-0 ps-lg-1 ms-lg-0">Rp 220.000</strong>
-                                </li>
+                                @endforeach
                             </ul>
                         </div>
-                        <a href="#" class="btn btn-primary btn-block">
-                            Pesan Sekarang
+                        <a href="#" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#jasaModal">Selengkapnya
                             <i class="bi bi-arrow-right"></i>
                         </a>
                     </div>
@@ -584,7 +623,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-12 mb-lg-4 mb-md-4 mb-5 mt-3" data-aos-delay="200">
                     <div class="d-flex align-items-center justify-content-lg-end justify-content-md-end justify-content-center">
-                        <a href="#" class="btn btn-primary rounded-pill d-flex align-items-center gap-2 py-3 px-4" style="font-weight: 500;">
+                        <a href="{{route ('portfolio') }}" class="btn btn-primary rounded-pill d-flex align-items-center gap-2 py-3 px-4" style="font-weight: 500;">
                             Lihat Lebih Banyak <i class="bi bi-arrow-right-circle fs-5"></i>
                         </a>
                     </div>
@@ -597,7 +636,7 @@
                             <p class="text-muted">Beberapa proyek perbaikan, upgrade, dan optimasi laptop atau PC yang telah kami selesaikan dengan hasil memuaskan.</p>
                             <div class="read-more d-flex justify-content-end">
                                 <div class="d-flex detail-pc align-items-center">
-                                    <a href="#" class="btn btn-primary d-flex align-items-center gap-2">
+                                    <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
                                         Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
                                     </a>
                                 </div>
@@ -809,11 +848,13 @@
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="formServisBarang">
+                <form id="formServisBarang" action="{{ route('serviceBarang.store') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
                         <div class="mb-3">
                             <label for="nama" class="form-label" style="font-weight: 600;">Nama Lengkap :</label>
-                            <input type="text" class="form-control" id="nama" name="nama" required>
+                            <input type="text" class="form-control" id="nama" name="nama"
+                                value="{{ Auth::check() ? Auth::user()->nama : '' }}" readonly>
                         </div>
                         <div class="mb-3">
                             <label for="telepon" class="form-label" style="font-weight: 600;">No. Telepon :</label>
@@ -821,25 +862,25 @@
                         </div>
                         <div class="mb-3">
                             <label for="barang" class="form-label" style="font-weight: 600;">Jenis Barang :</label>
-                            <select class="form-control" id="barang" name="barang" required>
+                            <select class="form-control" id="barang" name="barang_id" required>
                                 <option value="" disabled selected>Pilih Barang</option>
-                                <option value="Laptop">Laptop</option>
-                                <option value="HP">HP</option>
-                                <option value="Tablet">Tablet</option>
+                                @foreach($jenisBarang as $barang)
+                                <option value="{{ $barang->id }}">{{ $barang->nama }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="barang" class="form-label" style="font-weight: 600;">Pilih Jenis Kerusakan :</label>
-                            <select class="form-control" id="barang" name="barang" required>
-                                <option value="" disabled selected>Jenis Kerusakan</option>
-                                <option value="Layar Retak">Layar Retak</option>
-                                <option value="Baterai Rusak">Baterai Rusak</option>
-                                <option value="Speaker Tidak Berfungsi">Speaker Tidak Berfungsi</option>
-                                <option value="Kamera Bermasalah">Kamera Bermasalah</option>
-                                <option value="Tombol Tidak Berfungsi">Tombol Tidak Berfungsi</option>
-                                <option value="Software Error">Software Error</option>
+                            <label for="jenis_kerusakan" class="form-label" style="font-weight: 600;">Pilih Jenis Kerusakan :</label>
+                            <select class="form-control" id="jenis_kerusakan" name="jenis_kerusakan_id" required>
+                                <option value="" disabled selected>Pilih Jenis Kerusakan</option>
                             </select>
                         </div>
+
+                        <!-- Simpan semua jenis kerusakan dalam JSON untuk JavaScript -->
+                        <script>
+                            let jenisKerusakan = @json($jenisKerusakan ?? []);
+                        </script>
+
                         <div class="mb-3">
                             <label for="kerusakan" class="form-label" style="font-weight: 600;">Kerusakan Tambahan :</label>
                             <textarea class="form-control" id="kerusakan" name="kerusakan" rows="3" required></textarea>
@@ -850,14 +891,16 @@
                         </div>
                         <div class="mb-3">
                             <label for="harga" class="form-label" style="font-weight: 600;">Harga Servis :</label>
-                            <input type="text" class="form-control" id="harga" name="harga" min="0" placeholder="Masukkan harga servis" required>
+                            <input type="text" class="form-control" id="harga" name="harga" readonly>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary" form="formServisBarang">Kirim</button>
-                </div>
+                        <input type="hidden" id="status" name="status" value="pending">
+                        <input type="hidden" id="proses" name="proses" value="Menunggu">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn btn-primary" id="btnKirim">Kirim</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -875,52 +918,109 @@
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <form id="formServisJasa">
+                <form id="formServisJasa" method="POST">
+                    @csrf
+                    <div class="modal-body">
                         <div class="mb-3">
-                            <label for="namaJasa" class="form-label" style="font-weight: 600;">Nama Lengkap :</label>
-                            <input type="text" class="form-control" id="namaJasa" name="namaJasa" required>
+                            <label for="nama" class="form-label" style="font-weight: 600;">Nama Lengkap :</label>
+                            <input type="text" class="form-control" id="nama" name="nama" value="{{ Auth::check() ? Auth::user()->nama : '' }}" readonly>
                         </div>
                         <div class="mb-3">
-                            <label for="teleponJasa" class="form-label" style="font-weight: 600;">Alamat :</label>
-                            <input type="tel" class="form-control" id="teleponJasa" name="teleponJasa" required>
+                            <label for="alamat" class="form-label" style="font-weight: 600;">Alamat :</label>
+                            <input type="text" class="form-control" id="alamat" name="alamat" required>
                         </div>
                         <div class="mb-3">
-                            <label for="teleponJasa" class="form-label" style="font-weight: 600;">No. Telepon :</label>
-                            <input type="tel" class="form-control" id="teleponJasa" name="teleponJasa" required>
+                            <label for="telepon" class="form-label" style="font-weight: 600;">No. Telepon :</label>
+                            <input type="tel" class="form-control" id="telepon" name="telepon" required>
                         </div>
                         <div class="mb-3">
                             <label for="jenisJasa" class="form-label" style="font-weight: 600;">Jenis Jasa :</label>
                             <select class="form-control" id="jenisJasa" name="jenisJasa" required>
                                 <option value="" disabled selected>Pilih Jasa</option>
-                                <option value="Servis Elektronik">Servis Elektronik</option>
-                                <option value="Servis Kendaraan">Servis Kendaraan</option>
-                                <option value="Jasa Instalasi">Jasa Instalasi</option>
-                                <option value="Jasa Konsultasi">Jasa Konsultasi</option>
+                                @foreach($jenisLayanan as $layanan)
+                                <option value="{{ $layanan->id }}">
+                                    {{ $layanan->nama }} - Rp. {{ number_format($layanan->harga, 0, ',', '.') }}
+                                </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="deskripsiJasa" class="form-label" style="font-weight: 600;">Deskripsi Permintaan :</label>
-                            <textarea class="form-control" id="deskripsiJasa" name="deskripsiJasa" rows="3" required></textarea>
+                            <label for="deskripsi" class="form-label" style="font-weight: 600;">Deskripsi Permintaan :</label>
+                            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="tanggalJasa" class="form-label" style="font-weight: 600;">Tanggal Pelaksanaan :</label>
-                            <input type="date" class="form-control" id="tanggalJasa" name="tanggalJasa" required>
+                            <label for="tanggal" class="form-label" style="font-weight: 600;">Tanggal Pelaksanaan :</label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="hargaJasa" class="form-label" style="font-weight: 600;">Harga Jasa :</label>
-                            <input type="text" class="form-control" id="hargaJasa" name="hargaJasa" min="0" placeholder="Masukkan harga jasa" required>
-                        </div>
-                    </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-primary">Kirim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- modal jenis servis barang -->
+    <div class="modal fade" id="barangModal" tabindex="-1" aria-labelledby="barangModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="servisModalLabel">Detail Jenis Servis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="font-weight: 500;">Jenis Kerusakan :</h5>
+                    <ul class="features-list ">
+                        @foreach ($jenisKerusakan as $kerusakan)
+                        <li>
+                            <i class="bi bi-check-circle-fill text-primary"></i>
+                            <div class="ker">
+                                <span class="kerusakan">{{ $kerusakan->nama }}</span>
+                                <span class="harga">Rp {{ number_format($kerusakan->harga, 0, ',', '.') }}</span>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary" form="formServisJasa">Kirim</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- modal jenis servis jasa -->
+    <div class="modal fade" id="jasaModal" tabindex="-1" aria-labelledby="jasaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="servisModalLabel">Detail Jenis Servis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5 style="font-weight: 500;">Jenis Kerusakan :</h5>
+                    <ul class="features-list ">
+                        @foreach ($jenisLayanan as $layanan)
+                        <li>
+                            <i class="bi bi-check-circle-fill text-primary"></i>
+                            <div class="ker">
+                                <span class="kerusakan">{{ $layanan->nama }}</span>
+                                <span class="harga">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</span>
+                            </div>
+                        </li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </main>
 
@@ -940,5 +1040,134 @@
         });
     });
 </script>
+
+<script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let barangSelect = document.getElementById("barang");
+        let kerusakanSelect = document.getElementById("jenis_kerusakan");
+        let hargaInput = document.getElementById("harga");
+        let btnKirim = document.getElementById("btnKirim");
+        let form = document.getElementById("formServisBarang");
+
+        // Saat memilih jenis barang, filter jenis kerusakan
+        barangSelect.addEventListener("change", function() {
+            let barangID = this.value;
+            kerusakanSelect.innerHTML = '<option value="" disabled selected>Pilih Jenis Kerusakan</option>';
+            hargaInput.value = "";
+
+            let filteredKerusakan = jenisKerusakan.filter(k => k.barang_id == barangID);
+
+            if (filteredKerusakan.length > 0) {
+                filteredKerusakan.forEach(item => {
+                    let option = document.createElement("option");
+                    option.value = item.id;
+                    option.setAttribute("data-harga", item.harga);
+                    option.textContent = item.nama;
+                    kerusakanSelect.appendChild(option);
+                });
+            } else {
+                let option = document.createElement("option");
+                option.value = "";
+                option.textContent = "Tidak ada jenis kerusakan";
+                kerusakanSelect.appendChild(option);
+            }
+        });
+
+        // Saat memilih jenis kerusakan, isi harga otomatis
+        kerusakanSelect.addEventListener("change", function() {
+            let selectedOption = this.options[this.selectedIndex];
+            let harga = selectedOption.getAttribute("data-harga") || 0;
+            hargaInput.value = formatRupiah(harga);
+        });
+
+        // Fungsi format angka ke Rupiah
+        function formatRupiah(angka) {
+            return "Rp. " + parseInt(angka).toLocaleString("id-ID");
+        }
+
+        // Integrasi Midtrans saat tombol Kirim ditekan
+        btnKirim.addEventListener("click", function() {
+            let hargaValue = hargaInput.value.replace(/\D/g, '');
+            if (!hargaValue || hargaValue == "0") {
+                alert("Silakan pilih jenis barang dan kerusakan terlebih dahulu.");
+                return;
+            }
+
+            let formData = new FormData(form); // Ambil semua data dari form
+
+            fetch("{{ route('serviceBarang.store') }}", {
+                    method: "POST",
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.token) { // Fix: Gunakan 'token' bukan 'snap_token'
+                        // Tampilkan Midtrans Snap
+                        window.snap.pay(data.token, {
+                            onSuccess: function(result) {
+                                alert("Pembayaran berhasil!");
+                                window.location.href = "{{ route('serviceBarang.invoice', '') }}/" + result.order_id;
+                            },
+                            onPending: function(result) {
+                                alert("Pembayaran pending.");
+                            },
+                            onError: function(result) {
+                                alert("Pembayaran gagal.");
+                            }
+                        });
+                    } else {
+                        alert("Gagal mendapatkan token pembayaran.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        });
+    });
+</script>
+
+<script>
+    document.getElementById('formServisJasa').addEventListener('submit', function(event) {
+        event.preventDefault(); // Hindari submit form secara langsung
+
+        let formData = new FormData(this);
+
+        fetch("{{ route('serviceLayanan.store') }}", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response dari Server:", data); // Debugging
+
+                if (data.token) {
+                    console.log("Snap Token:", data.token); // Debugging
+
+                    window.snap.pay(data.token, {
+                        onSuccess: function(result) {
+                            alert("Pembayaran berhasil!");
+                            window.location.href = "{{ route('serviceLayanan.invoice', '') }}/" + result.order_id;
+                        },
+                        onPending: function(result) {
+                            alert("Pembayaran pending.");
+                        },
+                        onError: function(result) {
+                            alert("Pembayaran gagal.");
+                        }
+                    });
+                } else {
+                    console.error("Gagal mendapatkan token pembayaran. Response:", data);
+                    alert("Gagal mendapatkan token pembayaran.");
+                }
+            })
+            .catch(error => {
+                console.error("Fetch Error:", error);
+                alert("Terjadi kesalahan dalam pengiriman data.");
+            });
+    });
+</script>
+
 
 @endsection

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ServisJasa;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,9 +16,18 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        ServisJasa::create([
+            'order_id' => 'ORD-67DA31DD81488',
+            'user_id' => 3,
+            'nama' => 'Garcia Valencza',
+            'alamat' => 'Jl. Surabaya Gg. 100',
+            'telepon' => '081339059343',
+            'jenis_jasa_id' => 2,
+            'deskripsi' => 'Installasi WIFI',
+            'tanggal' => now(),
+            'harga' => 230000,
+            'status' => 'pending',
+            'proses' => 'Menunggu',
         ]);
     }
 }

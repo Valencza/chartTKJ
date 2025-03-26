@@ -35,15 +35,7 @@
             </a>
           </div>
           <div class="menu-item">
-            <a class="menu-link {{ request()->routeIs('kategoriJasa') ? 'active' : '' }}" href="{{route ('kategoriJasa') }}">
-              <span class="menu-bullet">
-                <span class="bullet bullet-dot"></span>
-              </span>
-              <span class="menu-title">Kategori Jasa<span>
-            </a>
-          </div>
-          <div class="menu-item">
-            <a class="menu-link {{ request()->routeIs('kategoriBarang') ? 'active' : '' }}" href="{{route ('kategoriBarang') }}">
+            <a class="menu-link {{ request()->routeIs('jenisBarang') ? 'active' : '' }}" href="{{route ('jenisBarang') }}">
               <span class="menu-bullet">
                 <span class="bullet bullet-dot"></span>
               </span>
@@ -60,14 +52,71 @@
           <span class="menu-title">Portofolio Kami</span>
         </a>
       </div> -->
-      <div class="menu-item">
-        <a class="menu-link {{ request()->routeIs('order') ? 'active' : '' }}" href="{{ route('order') }}">
+
+      <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
+        <span class="menu-link">
           <span class="menu-bullet">
-            <i class="fa fa-tools"></i>
+            <i class="bi bi-grid-fill"></i>
           </span>
-          <span class="menu-title">Orders</span>
-        </a>
+          <span class="menu-title">Order</span>
+          <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion ">
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('order') ? 'active' : '' }}" href="{{ route('order') }}">
+              <span class="menu-bullet">
+                <span class="fa fa-shopping-bag"></span>
+              </span>
+              <span class="menu-title">Order Produk</span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('orderServisBarang') ? 'active' : '' }}" href="{{ route('orderServisBarang') }}">
+              <span class="menu-bullet">
+                <span class="fa fa-tools"></span>
+              </span>
+              <span class="menu-title">Order Barang<span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('orderServisLayanan') ? 'active' : '' }}" href="{{ route('orderServisLayanan') }}">
+              <span class="menu-bullet">
+                <span class="fa fa-tools"></span>
+              </span>
+              <span class="menu-title">Order Layanan<span>
+            </a>
+          </div>
+        </div>
       </div>
+
+      <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
+        <span class="menu-link">
+          <span class="menu-bullet">
+            <i class="bi bi-grid-fill"></i>
+          </span>
+          <span class="menu-title">Jenis Jasa</span>
+          <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion ">
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('jenisKerusakan') ? 'active' : '' }}" href="{{route ('jenisKerusakan') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Jenis Kerusakan</span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('jenisLayanan') ? 'active' : '' }}" href="{{route ('jenisLayanan') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Jenis Layanan<span>
+            </a>
+          </div>
+        </div>
+      </div>
+
       <!-- <div class="menu-item">
         <a class="menu-link" href="#">
           <span class="menu-bullet">

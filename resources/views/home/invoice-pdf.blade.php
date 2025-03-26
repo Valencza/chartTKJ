@@ -19,7 +19,7 @@
     <h2 class="fw-bold">Invoice</h2>
     <p><strong>Tanggal:</strong> {{ $order->created_at->format('d M Y') }}</p>
     <p><strong>Penerima:</strong> {{ $order->user->nama }}</p>
-    <p><strong>Penerima:</strong> ({{ $order->user->email }})</p>
+    <p><strong>Email:</strong> ({{ $order->user->email }})</p>
 
     <table>
         <thead>

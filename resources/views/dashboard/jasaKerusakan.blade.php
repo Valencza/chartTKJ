@@ -32,24 +32,26 @@
                         <thead class="fw-bold fs-7 text-uppercase text-gray-900 text-nowrap bg-gray-100">
                             <tr>
                                 <th class="text-center px-3">No.</th>
-                                <th class="pe-3 min-w-150px">Kategori</th>
+                                <th class="pe-3 min-w-150px">Barang</th>
+                                <th class="pe-3 min-w-150px">Nama Kerusakan</th>
                                 <th class="pe-3 min-w-150px">Harga</th>
                                 <th class="text-center pe-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="fw-semibold text-gray-700">
-                            @foreach ($kategoriJasaList as $index => $kategoriJasa)
+                            @foreach ($jenisKerusakanList as $index => $jenisKerusakan)
                             <tr>
                                 <td class="text-center">{{ $index + 1 }}</td>
-                                <td>{{ $kategoriJasa->nama }}</td>
-                                <td>Rp. {{ number_format($kategoriJasa->harga, 0, ',', '.') }}</td>
+                                <td>{{ $jenisKerusakan->jenisBarang->nama ?? 'Tidak Ada Kategori' }}</td>
+                                <td>{{ $jenisKerusakan->nama }}</td>
+                                <td>Rp. {{ number_format($jenisKerusakan->harga, 0, ',', '.') }}</td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn btn-outline btn-outline-primary btn-active-light-primary btn-sm btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" data-bs-target="#editKategoriModal" data-bs-toggle="modal">
                                         <i class="ki-duotone ki-pencil fs-2"></i>
                                     </button>
                                     <button class="btn btn-icon btn btn-outline btn-outline-danger btn-active-light-danger btn-sm"
                                         data-kt-permissions-table-filter="delete_row"
-                                        data-id="{{ $kategoriJasa->id }}"
+                                        data-id="{{ $jenisKerusakan->id }}"
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Hapus">
@@ -73,16 +75,27 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="modalTambahKategoriLabel">Tambah Kategori</h4>
+                <h4 class="modal-title" id="modalTambahKategoriLabel">Tambah Jenis Kerusakan</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route ('kategoriJasa.store') }}" id="formTambahKategori" method="POST" enctype="multipart/form-data">
+                <form action="{{route ('jenisKerusakan.store') }}" id="formTambahKategori" method="POST" enctype="multipart/form-data">
                     @csrf
+
+                    <!-- Dropdown Kategori -->
+                    <div class="mb-3">
+                        <label for="id_jenisBarang" class="form-label">Barang</label>
+                        <select class="form-select" name="id_jenisBarang" id="jenisBarangList" required>
+                            <option value="" selected disabled>Pilih Barang</option>
+                            @foreach($jenisBarangList as $jenisBarang)
+                            <option value="{{ $jenisBarang->id }}">{{ $jenisBarang->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <!-- Nama Kategori -->
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Kategori Jasa</label>
+                        <label for="nama" class="form-label">Jenis Kerusakan</label>
                         <input type="text" class="form-control" name="nama" id="nama" placeholder="Masukkan Kategori" required>
                     </div>
 
@@ -115,20 +128,34 @@
             </div>
             <div class="modal-body">
                 <!-- Form Input untuk Edit Produk -->
-                @if (isset($kategoriJasa) && $kategoriJasa !== null)
-                <form action="{{ route('kategoriJasa.update', ['id' => $kategoriJasa->id ?? '']) }}" method="POST" id="editKategoriForm" enctype="multipart/form-data">
+                @if (isset($jenisKerusakan) && $jenisKerusakan !== null)
+                <form action="{{ route('jenisKerusakan.update', ['id' => $jenisKerusakan->id ?? '']) }}" method="POST" id="editKategoriForm" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
+                    <!-- Dropdown Kategori -->
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Kategori Jasa</label>
-                        <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama', $kategoriJasa->nama) }}" required>
+                        <label for="id_jenisBarang" class="form-label">Barang</label>
+                        <select name="id_jenisBarang" id="id_jenisBarang" class="form-control" required>
+                            <option value="">Pilih Barang</option>
+                            @foreach ($jenisBarangList as $jenisBarang)
+                            <option value="{{ $jenisBarang->id }}" {{ old('id_jenisBarang', $jenisKerusakan->id_jenisBarang) == $jenisBarang->id ? 'selected' : '' }}>
+                                {{ $jenisBarang->nama }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="nama" class="form-label">Jenis Kerusakan</label>
+                        <input type="text" class="form-control" name="nama" id="nama" value="{{ old('nama', $jenisKerusakan->nama) }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="text" class="form-control" name="harga" id="harga" value="{{ old('harga', $kategoriJasa->harga) }}" required>
+                        <input type="text" class="form-control" name="harga" id="harga" value="{{ old('harga', $jenisKerusakan->harga) }}" required>
                     </div>
+
 
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -154,7 +181,7 @@
         let form = document.getElementById("formTambahKategori");
         let formData = new FormData(form);
 
-        fetch("{{ route('kategoriJasa.store') }}", {
+        fetch("{{ route('jenisKerusakan.store') }}", {
                 method: "POST",
                 headers: {
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
@@ -290,7 +317,7 @@
         document.querySelectorAll('[data-kt-permissions-table-filter="delete_row"]').forEach(button => {
             button.addEventListener("click", function() {
                 // Ambil ID produk dari data-id
-                let kategoriId = button.getAttribute("data-id");
+                let jenisKerusakanId = button.getAttribute("data-id");
 
                 // Menampilkan SweetAlert untuk konfirmasi
                 Swal.fire({
@@ -310,7 +337,7 @@
                     if (result.isConfirmed) {
                         // Kirim request AJAX untuk menghapus data dan gambar
                         $.ajax({
-                            url: '/dashboard/kategori-jasa/' + kategoriId, // Gantilah dengan route yang benar
+                            url: '/dashboard/jenis-kerusakan/' + jenisKerusakanId, // Gantilah dengan route yang benar
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Tambahkan header CSRF token
@@ -366,8 +393,5 @@
         });
     });
 </script>
-
-@endstack
-
 
 @endsection

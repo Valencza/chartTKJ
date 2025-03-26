@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\ServisBarang;
+use App\Models\ServisJasa;
 use Illuminate\Http\Request;
 
 class RiwayatController extends Controller
@@ -13,7 +15,14 @@ class RiwayatController extends Controller
         $orders = Order::where('user_id', $userId)
             ->where('status', 'paid')
             ->get();
+        $jasaBarang = ServisBarang::where('user_id', $userId)
+            ->where('status', 'paid')
+            ->get();
 
-        return view('home.riwayat', compact('orders'));
+            $jasaLayanan = ServisJasa::where('user_id', $userId)
+            ->where('status', 'paid')
+            ->get();
+
+        return view('home.riwayat', compact('orders', 'jasaBarang', 'jasaLayanan'));
     }
 }
