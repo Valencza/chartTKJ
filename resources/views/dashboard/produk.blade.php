@@ -117,12 +117,15 @@
                     </div>
 
                     <!-- Dropdown Kategori -->
-                    <select class="form-select" name="id_kategoriProduk" id="kategoriProdukList" required>
-                        <option value="" selected disabled>Pilih Kategori</option>
-                        @foreach($kategoriProdukList as $kategori)
-                        <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
-                        @endforeach
-                    </select>
+                    <div class="mb-3">
+                        <label for="Kategori" class="form-label">Kategori</label>
+                        <select class="form-select" name="id_kategoriProduk" id="kategoriProdukList" required>
+                            <option value="" selected disabled>Pilih Kategori</option>
+                            @foreach($kategoriProdukList as $kategori)
+                            <option value="{{ $kategori->id }}">{{ $kategori->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <!-- Harga -->
                     <div class="mb-3">
@@ -142,15 +145,19 @@
                     <!-- Spesifikasi -->
                     <div class="mb-3">
                         <label for="spesifikasi" class="form-label">Spesifikasi</label>
-                        <textarea class="form-control" name="spesifikasi" id="spesifikasi" rows="3" placeholder="Masukkan Spesifikasi Produk (opsional)"></textarea>
+                        <div id="spesifikasi-container">
+                            <div class="d-flex mb-2">
+                                <input type="text" class="form-control me-2" name="spesifikasi_key[]" placeholder="Nama Spesifikasi (contoh: Ukuran Layar)">
+                                <input type="text" class="form-control me-2" name="spesifikasi_value[]" placeholder="Detail (contoh: 23.8 inci)">
+                                <button type="button" class="btn btn-danger remove-spec">X</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success" id="addSpec">+ Tambah Spesifikasi</button>
                     </div>
 
-                    <!-- Terjual -->
-                    <div class="mb-3">
-                        <label for="stok_out" class="form-label">Terjual</label>
-                        <input type="number" class="form-control" name="stok_out" id="stok_out" placeholder="Jumlah Terjual" required>
-                    </div>
-
+                    <!-- Terjual hidden-->
+                        <input type="hidden" class="form-control" name="stok_out" id="stok_out" value="0" placeholder="Jumlah Terjual" required>
+                 
                     <!-- Stok -->
                     <div class="mb-3">
                         <label for="stok_in" class="form-label">Stok</label>
@@ -223,7 +230,30 @@
 
                     <div class="mb-3">
                         <label for="spesifikasi" class="form-label">Spesifikasi</label>
-                        <textarea class="form-control" name="spesifikasi" id="spesifikasi" rows="3" required>{{ old('spesifikasi', $produk->spesifikasi) }}</textarea>
+                        <div id="spesifikasi-container2">
+                            @php
+                            // Ambil data spesifikasi dari input lama atau dari database
+                            $spesifikasi = old('spesifikasi', json_decode($produk->spesifikasi, true) ?? []);
+                            @endphp
+
+                            @if (!empty($spesifikasi))
+                            @foreach ($spesifikasi as $key => $value)
+                            <div class="d-flex mb-2">
+                                <input type="text" class="form-control me-2" name="spesifikasi_key[]" value="{{ old('spesifikasi_key')[$loop->index] ?? $key }}" placeholder="Nama Spesifikasi">
+                                <input type="text" class="form-control me-2" name="spesifikasi_value[]" value="{{ old('spesifikasi_value')[$loop->index] ?? $value }}" placeholder="Detail">
+                                <button type="button" class="btn btn-danger remove-spec">X</button>
+                            </div>
+                            @endforeach
+                            @else
+                            <div class="d-flex mb-2">
+                                <input type="text" class="form-control me-2" name="spesifikasi_key[]" placeholder="Nama Spesifikasi">
+                                <input type="text" class="form-control me-2" name="spesifikasi_value[]" placeholder="Detail">
+                                <button type="button" class="btn btn-danger remove-spec">X</button>
+                            </div>
+                            @endif
+
+                        </div>
+                        <button type="button" class="btn btn-success" id="editSpec">+ Tambah Spesifikasi</button>
                     </div>
 
                     <div class="mb-3">
@@ -250,8 +280,30 @@
     </div>
 </div>
 
-
 <!--js alert tambah data-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("addSpec").addEventListener("click", function() {
+            let specContainer = document.getElementById("spesifikasi-container");
+            let newSpec = document.createElement("div");
+            newSpec.classList.add("d-flex", "mb-2");
+            newSpec.innerHTML = `
+            <input type="text" class="form-control me-2" name="spesifikasi_key[]" placeholder="Nama Spesifikasi">
+            <input type="text" class="form-control me-2" name="spesifikasi_value[]" placeholder="Detail">
+            <button type="button" class="btn btn-danger remove-spec">X</button>
+        `;
+            specContainer.appendChild(newSpec);
+        });
+
+        document.getElementById("spesifikasi-container").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-spec")) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+
 <script>
     document.getElementById("formTambahProduk").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -295,6 +347,28 @@
             .catch(error => {
                 Swal.fire("Error!", "Terjadi kesalahan pada server.", "error");
             });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("editSpec").addEventListener("click", function() {
+            let specContainer = document.getElementById("spesifikasi-container2");
+            let newSpec = document.createElement("div");
+            newSpec.classList.add("d-flex", "mb-2");
+            newSpec.innerHTML = `
+            <input type="text" class="form-control me-2" name="spesifikasi_key[]" placeholder="Nama Spesifikasi">
+            <input type="text" class="form-control me-2" name="spesifikasi_value[]" placeholder="Detail">
+            <button type="button" class="btn btn-danger remove-spec">X</button>
+        `;
+            specContainer.appendChild(newSpec);
+        });
+
+        document.getElementById("spesifikasi-container2").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-spec")) {
+                e.target.parentElement.remove();
+            }
+        });
     });
 </script>
 

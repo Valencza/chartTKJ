@@ -118,26 +118,26 @@
             </div>
 
             <!-- Jumlah dan Tombol Beli -->
-              <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="d-flex justify-content-between align-items-center mt-3">
               <form action="{{ route('checkout', ['slug' => $produk->slug]) }}" method="GET">
                 <div class="d-flex align-items-center">
                   <button type="button" class="btn btn-primary fw-bold" id="decrease">-</button>
                   <input type="number" class="form-control mx-2" name="jumlah" id="jumlah_produk" style="width: 50px;" value="1" min="1" max="{{ $produk->stok_in }}">
                   <button type="button" class="btn btn-primary fw-bold" id="increase">+</button>
                 </div>
-              </div>
-              <div class="mt-4 pt-3 button-card d-flex">
-                <button class="btn btn-primary rounded-pill mb-lg-0 mb-md-0 mb-3">Beli Sekarang</button>
-                </form>
-                <button class="btn btn-outline-primary rounded-pill ms-2 d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#spesifikasiModal">
-                  <i class="bi bi-info-circle me-2"></i>
-                  <span>Spesifikasi</span>
-                </button>
-                <button id="keranjangButton" class="btn btn-outline-primary text-center rounded-pill ms-lg-2 ms-md-3 mb-lg-0 mb-md-0 mb-3 d-flex align-items-center justify-content-center">
-                  <i class="bi bi-cart3 me-2"></i>
-                  <span id="keranjangText" style="font-weight: 600;">Keranjang</span>
-                </button>
-              </div>
+            </div>
+            <div class="mt-4 pt-3 button-card d-flex">
+              <button class="btn btn-primary rounded-pill mb-lg-0 mb-md-0 mb-3">Beli Sekarang</button>
+              </form>
+              <button class="btn btn-outline-primary rounded-pill ms-2 d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#spesifikasiModal">
+                <i class="bi bi-info-circle me-2"></i>
+                <span>Spesifikasi</span>
+              </button>
+              <button id="keranjangButton" class="btn btn-outline-primary text-center rounded-pill ms-lg-2 ms-md-3 mb-lg-0 mb-md-0 mb-3 d-flex align-items-center justify-content-center">
+                <i class="bi bi-cart3 me-2"></i>
+                <span id="keranjangText" style="font-weight: 600;">Keranjang</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -365,15 +365,17 @@
         <div class="table-responsive">
           <table class="table table-bordered custom-width">
             <tbody>
+              @foreach (json_decode($produk->spesifikasi, true) as $key => $value)
               <tr>
                 <td>
                   <div class="icon-text">
                     <i class="bi bi-check-circle-fill text-primary"></i>
-                    <span>Ukuran Layar Ukuran Layar Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim vero ullam neque beatae sunt voluptatum nam corrupti, recusandae eos sequi similique soluta. Sequi voluptas, natus illum explicabo quam error eveniet?</span>
+                    <span>{{ ucfirst($key) }}</span>
                   </div>
                 </td>
-                <td>23.8 inci Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae odit maxime ipsa eum, mollitia fugit sit. Sunt reiciendis architecto sed cupiditate libero rem nulla, incidunt autem dolor ut sit voluptates?</td>
+                <td>{{ $value }}</td>
               </tr>
+              @endforeach
             </tbody>
           </table>
         </div>
@@ -384,6 +386,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
   const stars = document.querySelectorAll('.star');

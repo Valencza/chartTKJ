@@ -391,16 +391,17 @@
                   Silakan isi formulir di bawah ini untuk memberikan pesan atau ulasan Anda kepada kami. Kami akan segera menanggapi!
                 </p>
           
-                <form action="forms/contact.php" method="post" class="php-email-form" data-aos-delay="200">
+                <form action="{{route ('storeUlasanUser') }}" method="POST" data-aos-delay="200">
+                  @csrf
                   <div class="row gy-4">
                     <!-- Nama -->
                     <div class="col-md-6">
-                      <input type="text" name="name" class="form-control" placeholder="Nama Anda" required autocomplete="off">
+                      <input type="text" name="nama" class="form-control" value="{{ Auth::user()->nama ?? 'Tidak ada nama' }}" readonly>
                     </div>
           
                     <!-- Email -->
                     <div class="col-md-6">
-                      <input type="email" class="form-control" name="email" placeholder="Email Anda" required autocomple  te="off">
+                      <input type="email" class="form-control" name="email" value="{{ Auth::user()->email ?? 'Tidak ada email' }}" readonly>
                     </div>
           
                     <!-- Pesan -->
@@ -410,9 +411,6 @@
           
                     <!-- Tombol Submit -->
                     <div class="col-12 text-center">
-                      <div class="loading">Memuat...</div>
-                      <div class="error-message"></div>
-                      <div class="sent-message">Pesan Anda telah berhasil dikirim. Terima kasih!</div>
                       <button type="submit" class="btn btn-primary">Kirim Pesan</button>
                     </div>
                   </div>

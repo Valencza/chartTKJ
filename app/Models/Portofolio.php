@@ -33,6 +33,7 @@ class Portofolio extends Model
         'klien',
         'lokasi',
         'deskripsi',
+        'detail',
         'tanggalProyek',
     ];
 }

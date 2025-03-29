@@ -28,40 +28,43 @@
                         id="table">
                         <thead class="fw-bold fs-7 text-uppercase text-gray-900 text-nowrap bg-gray-100">
                             <tr>
-                                <th class="text-center pe-3 min-w-80px">ID</th>
-                                <th class="pe-3 min-w-80px">Nama Pembeli</th>
-                                <th class="pe-3 min-w-150px">Produk</th>
-                                <th class="pe-3 min-w-150px">Jumlah</th>
-                                <th class="pe-3 min-w-150px">Total Harga</th>
-                                <th class="pe-3 min-w-150px">Tanggal Order</th>
-                                <th class="pe-3 min-w-150px">Status</th>
+                                <th class="text-center pe-3 min-w-80px">No</th>
+                                <th class="pe-3 min-w-80px">Nama</th>
+                                <th class="pe-3 min-w-150px">Email</th>
+                                <th class="pe-3 min-w-150px">No Telp</th>
+                                <th class="pe-3 min-w-150px">Role</th>
                                 <th class="text-center pe-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="fw-semibold text-gray-700">
-                            @foreach ($orders as $order)
-                            @foreach ($order->items as $item)
+                            @foreach ($users as $index => $user)
                             <tr>
-                                <!-- Menampilkan order_id yang diambil dari item -->
-                                <td class="text-center">{{ $item->order_id }}</td>
-                                <td>{{ $order->pembeli->nama ?? 'Nama Tidak Tersedia' }}</td>
-                                <td>{{ $item->produk->nama ?? 'Produk Tidak Tersedia' }}</td>
-                                <td>{{ $item->jumlah ?? 'Jumlah Tidak Tersedia' }}</td>
-                                <td>Rp. {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y H:i') }}</td>
+                                <!-- Menggunakan nomor urut -->
+                                <td class="text-center">{{ $loop->iteration }}</td>
+                                <td>{{ $user->nama ?? '-' }}</td>
+                                <td>{{ $user->email ?? '-' }}</td>
+                                <td>{{ $user->no_telpon ?? '-' }}</td>
                                 <td>
-                                    <div class="badge badge-light-{{ $order->status == 'paid' ? 'success' : ($order->status == 'pending' ? 'warning' : 'danger') }} fs-5">
-                                        {{ ucfirst($order->status) }}
+                                    <div class="badge badge-light-{{ 
+                                                    $user->role == 'admin' ? 'success' : 
+                                                    ($user->role == 'user' ? 'warning' : 
+                                                    ($user->role == 'petugas' ? 'danger' : 'secondary')) 
+                                                }} fs-5">
+                                        {{ ucfirst($user->role) }}
                                     </div>
                                 </td>
                                 <td class="text-end text-nowrap">
-                                    <button class="btn btn-icon btn-outline btn-outline-primary btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editStatusModal" data-id="{{ $order->id }}" data-status="{{ $order->status }}">
+                                    <button class="btn btn-icon btn-outline btn-outline-primary btn-sm btn-edit"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editStatusModal"
+                                        data-id="{{ $user->id }}"
+                                        data-status="{{ $user->role }}">
                                         <i class="ki-duotone ki-pencil fs-2"></i>
                                     </button>
                                 </td>
                             </tr>
                             @endforeach
-                            @endforeach
+
                         </tbody>
                     </table>
                 </div>
@@ -77,19 +80,19 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editStatusModalLabel">Edit Status Order</h5>
+                <h5 class="modal-title" id="editStatusModalLabel">Edit Role User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="editStatusForm">
                     @csrf
-                    <input type="hidden" id="orderId" name="order_id">
+                    <input type="hidden" id="userId" name="userId">
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="paid">Paid</option>
-                            <option value="pending">Pending</option>
-                            <option value="canceled">Canceled</option>
+                        <label for="role" class="form-label">Role</label>
+                        <select class="form-select" id="role" name="role" required>
+                            <option value="admin">Admin</option>
+                            <option value="petugas">Petugas</option>
+                            <option value="user">User</option>
                         </select>
                     </div>
                     <div class="mb-3 text-end">
@@ -107,15 +110,15 @@
 
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
-                const orderId = this.getAttribute('data-id');
-                const orderStatus = this.getAttribute('data-status');
+                const userId = this.getAttribute('data-id');
+                const role = this.getAttribute('data-status');
 
-                console.log('Order ID:', orderId); // Debugging
-                console.log('Order Status:', orderStatus); // Debugging
+                console.log('User ID:', userId); // Debugging
+                console.log('Role:', role); // Debugging
 
                 // Mengatur nilai pada modal
-                document.getElementById('orderId').value = orderId;
-                document.getElementById('status').value = orderStatus;
+                document.getElementById('userId').value = userId;
+                document.getElementById('role').value = role;
             });
         });
     });
@@ -124,17 +127,17 @@
     document.getElementById('editStatusForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const orderId = document.getElementById('orderId').value;
-        const status = document.getElementById('status').value;
+        const userId = document.getElementById('userId').value;
+        const role = document.getElementById('role').value;
 
-        fetch(`/order/${orderId}`, {
+        fetch(`/dashboard/user/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    status: status
+                    role: role
                 })
             })
             .then(response => response.json())

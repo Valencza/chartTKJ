@@ -17,4 +17,10 @@ class jenisLayanan extends Model
         'nama',
         'harga',
     ];
+
+    // Define the relationship back to ServisJasa
+    public function servisJasa()
+    {
+        return $this->hasMany(ServisJasa::class, 'jenis_jasa_id');
+    }
 }

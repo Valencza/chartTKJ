@@ -26,52 +26,34 @@
                                 <th class="pe-3 min-w-150px">Jenis Barang</th>
                                 <th class="pe-3 min-w-150px">Merk</th>
                                 <th class="pe-3 min-w-150px">Jenis Kerusakan</th>
-                                <th class="pe-3 min-w-150px">Harga</th>
-                                <th class="pe-3 min-w-150px">Petugas</th>
                                 <th class="pe-3 min-w-150px">Back Up</th>
                                 <th class="pe-3 min-w-150px">Password</th>
-                                <th class="pe-3 min-w-150px">Status</th>
-                                <th class="pe-3 min-w-150px">Proses</th>
+                                <th class="pe-3 min-w-150px">proses</th>
                                 <th class="text-center pe-3">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="fw-semibold text-gray-700">
-                            @foreach ($servisBarang as $servis)
+                            @foreach ($servisBarangPetugas as $servis)
                             <tr>
                                 <td class="text-center">{{ $servis->order_id }}</td>
-                                <td>{{ $servis->user->nama ?? 'Nama Tidak Tersedia' }}</td>
+                                <td>{{ $servis->petugas->nama ?? 'Nama Tidak Tersedia' }}</td>
                                 <td>{{ $servis->jenisBarang?->nama ?? 'Barang Tidak Tersedia' }}</td>
                                 <td>{{ $servis->merk ?? 'Tidak Ada Merk' }}</td>
                                 <td>{{ $servis->jenisKerusakan?->nama ?? 'Kerusakan Tidak Tersedia' }}</td>
                                 <td>Rp. {{ number_format($servis->harga, 0, ',', '.') }}</td>
                                 <td>
-                                    {{ $servis->servisBarangPetugas->petugas->nama ?? 'Belum Ditugaskan' }}
-                                </td>
-                                <td>
                                     {{ $servis->backUp ?? 'Tidak Ada Data' }}
                                 </td>
                                 <td>
-                                    {{ $servis->password ?? 'Tidak Ada Password' }}
+                                    {{ $servis->proses ?? 'Menunggu' }}
                                 </td>
-                                <td>
-                                    <div class="badge badge-light-{{ $servis->status == 'paid' ? 'success' : ($servis->status == 'pending' ? 'warning' : 'danger') }} fs-5">
-                                        {{ ucfirst($servis->status) }}
-                                    </div>
-                                </td>
-                                <td>{{ $servis->proses ?? 'Menunggu' }}</td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn-outline btn-outline-primary btn-sm btn-edit"
                                         data-bs-toggle="modal"
                                         data-bs-target="#editStatusModal"
                                         data-id="{{ $servis->id }}"
-                                        data-status="{{ $servis->status }}">
+                                        data-proses="{{ $servis->proses }}">
                                         <i class="ki-duotone ki-pencil fs-2"></i>
-                                    </button>
-                                    <button class="btn btn-icon btn-outline btn-outline-success btn-sm btn-pilih-petugas"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalPenugasan"
-                                        data-id="{{ $servis->id }}">
-                                        <i class="ki-duotone ki-user fs-2"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -99,11 +81,10 @@
                     @csrf
                     <input type="hidden" id="servisBarangId" name="servis_barang_id">
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="paid">Paid</option>
-                            <option value="pending">Pending</option>
-                            <option value="canceled">Canceled</option>
+                        <label for="proses" class="form-label">Proses</label>
+                        <select class="form-select" id="proses" name="proses" required>
+                            <option value="diproses">Diproses</option>
+                            <option value="selesai">Selesai</option>
                         </select>
                     </div>
                     <div class="mb-3 text-end">
@@ -115,36 +96,6 @@
     </div>
 </div>
 
-<!-- Modal Penugasan Petugas -->
-<div class="modal fade" id="modalPenugasan" tabindex="-1" aria-labelledby="modalPenugasanLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalPenugasanLabel">Tugaskan Petugas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="formPenugasan" method="POST" action="{{ route('orderServisBarang.petugas') }}">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" id="servis_barang_id" name="servis_barang_id">
-
-                    <label for="petugas_id">Pilih Petugas</label>
-                    <select class="form-control" id="petugas_id" name="petugas_id">
-                        @foreach ($petugas as $p)
-                        <option value="{{ $p->id }}">{{ $p->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Tugaskan Petugas</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const editButtons = document.querySelectorAll('.btn-edit');
@@ -152,14 +103,14 @@
         editButtons.forEach(button => {
             button.addEventListener('click', function() {
                 const servisBarangId = this.getAttribute('data-id');
-                const servisStatus = this.getAttribute('data-status');
+                const servisProses = this.getAttribute('data-proses');
 
                 console.log('Servis ID:', servisBarangId); // Debugging
-                console.log('Status:', servisStatus); // Debugging
+                console.log('Proses:', servisProses); // Debugging
 
                 // Mengatur nilai pada modal
                 document.getElementById('servisBarangId').value = servisBarangId;
-                document.getElementById('status').value = servisStatus;
+                document.getElementById('status').value = servisProses;
             });
         });
     });
@@ -169,16 +120,16 @@
         event.preventDefault();
 
         const servisBarangId = document.getElementById('servisBarangId').value;
-        const status = document.getElementById('status').value;
+        const proses = document.getElementById('proses').value;
 
-        fetch(`/order-servis-barang/${servisBarangId}`, {
+        fetch(`/order-servis-barang-petugas/${servisBarangId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    status: status
+                    proses: proses
                 })
             })
             .then(response => response.json())
@@ -196,18 +147,5 @@
             });
     });
 </script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Ketika tombol "Pilih Petugas" ditekan
-        document.querySelectorAll(".btn-pilih-petugas").forEach(button => {
-            button.addEventListener("click", function() {
-                let servisId = this.getAttribute("data-id"); // Ambil ID servis
-                document.getElementById("servis_barang_id").value = servisId; // Set ID servis ke input hidden
-            });
-        });
-    });
-</script>
-
 
 @endsection

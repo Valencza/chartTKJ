@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\jenisBarang;
 use App\Models\jenisKerusakan;
 use App\Models\jenisLayanan;
+use App\Models\Portofolio;
 use App\Models\ServisBarang;
 use App\Models\ServisJasa;
 use Illuminate\Http\Request;
@@ -21,8 +22,9 @@ class serviceController extends Controller
         $jenisBarang = jenisBarang::all(); // Ambil semua jenis barang
         $jenisKerusakan = JenisKerusakan::select('id', 'id_jenisBarang as barang_id', 'nama', 'harga')->get(); // Ambil id, barang_id, dan nama jenis kerusakan
         $jenisLayanan = jenisLayanan::all();
+        $portfolios = Portofolio::latest()->take(3)->get(); // Ambil 3 data terbaru
 
-        return view('home.service', compact('jenisBarang', 'jenisKerusakan', 'jenisLayanan'));
+        return view('home.service', compact('jenisBarang', 'jenisKerusakan', 'jenisLayanan', 'portfolios'));
     }
 
     public function getJenisKerusakan($barang_id)
@@ -42,11 +44,13 @@ class serviceController extends Controller
             'telepon' => 'required|string',
             'barang_id' => 'required|exists:jenis_barang,id',
             'jenis_kerusakan_id' => 'required|exists:jenis_kerusakan,id',
+            'merk' => 'required|string',
             'kerusakan' => 'nullable|string',
-            'tanggal' => 'required|date',
             'harga' => 'required|string',
             'status' => 'required',
             'proses' => 'required',
+            'backUp' => 'nullable|in:iya,tidak',
+            'password' => 'nullable|string',
         ]);
 
         // Konversi harga ke angka (hapus Rp, titik, dll.)
@@ -61,11 +65,13 @@ class serviceController extends Controller
             'telepon' => $request->telepon,
             'barang_id' => $request->barang_id,
             'jenis_kerusakan_id' => $request->jenis_kerusakan_id,
+            'merk' => $request->merk,
             'kerusakan' => $request->kerusakan,
-            'tanggal' => $request->tanggal,
             'harga' => $harga,
             'status' => $request->status,
             'proses' => $request->proses,
+            'backUp' => $request->backUp, // Tambahkan backUp
+            'password' => $request->password, // Tambahkan password
         ]);
 
         // Proses pembayaran dengan Midtrans
@@ -104,7 +110,7 @@ class serviceController extends Controller
         }
     }
 
-    public function paymentCallback(Request $request)
+    public function paymentCallbackServis(Request $request)
     {
         $order_id = $request->order_id;
         $transaction_status = $request->transaction_status;
@@ -130,17 +136,20 @@ class serviceController extends Controller
         return redirect()->route('serviceBarang.invoice', ['order_id' => $order_id]);
     }
 
-    public function showInvoice($order_id)
+    public function showInvoiceServis($order_id, Request $request)
     {
         $servis = ServisBarang::with('jenisKerusakan', 'jenisBarang', 'user')
             ->where('order_id', $order_id)
             ->first();
 
+        $source = $request->query('source', 'riwayat'); // Default 'riwayat' jika tidak ada parameter
+
+
         if (!$servis) {
             return abort(404, 'Invoice tidak ditemukan.');
         }
 
-        return view('home.invoiceJasa', compact('servis'));
+        return view('home.invoiceServis', compact('servis', 'source'));
     }
 
     public function downloadInvoiceServisBarang($order_id)
@@ -148,7 +157,7 @@ class serviceController extends Controller
         $servis = ServisBarang::where('order_id', $order_id)->first();
 
         $pdf = PDF::loadView('home.invoiceBarang-pdf', compact('servis'));
-        return $pdf->download('invoice_' . $servis->order_id . '.pdf');
+        return $pdf->download('invoiceServis_' . $servis->order_id . '.pdf');
     }
 
     public function getHargaLayanan($id)
@@ -215,6 +224,9 @@ class serviceController extends Controller
                 'first_name' => auth()->user()->nama ?? 'Pelanggan',
                 'phone' => $servisJasa->telepon,
             ],
+            'callbacks' => [
+                'finish' => route('serviceLayanan.paymentCallback', ['order_id' => $servisJasa->order_id]), // Callback ke fungsi pembayaran
+            ],
         ];
 
         try {
@@ -223,5 +235,54 @@ class serviceController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function paymentCallbackLayanan(Request $request)
+    {
+        $order_id = $request->order_id;
+        $transaction_status = $request->transaction_status;
+
+        // Ambil data servis
+        $servisJasa = ServisJasa::where('order_id', $order_id)->first();
+
+        if (!$servisJasa) {
+            return abort(404, 'Data servis tidak ditemukan.');
+        }
+
+        // Update status berdasarkan status transaksi Midtrans
+        if ($transaction_status == 'settlement' || $transaction_status == 'capture') {
+            $servisJasa->status = 'paid'; // Pembayaran sukses
+        } elseif ($transaction_status == 'pending') {
+            $servisJasa->status = 'pending'; // Masih menunggu pembayaran
+        } elseif ($transaction_status == 'deny' || $transaction_status == 'expire' || $transaction_status == 'cancel') {
+            $servisJasa->status = 'failed'; // Pembayaran gagal
+        }
+
+        $servisJasa->save();
+
+        return redirect()->route('serviceLayanan.invoice', ['order_id' => $order_id]);
+    }
+
+    public function showInvoiceLayanan($order_id, Request $request)
+    {
+        $servisJasa = ServisJasa::with('jenisJasa', 'user')
+            ->where('order_id', $order_id)
+            ->first();
+
+        $source = $request->query('source', 'riwayat'); // Default 'riwayat' jika tidak ada parameter
+
+        if (!$servisJasa) {
+            return abort(404, 'Invoice tidak ditemukan.');
+        }
+
+        return view('home.invoiceJasa', compact('servisJasa'));
+    }
+
+    public function downloadInvoiceServisLayanan($order_id)
+    {
+        $servisJasa = ServisJasa::where('order_id', $order_id)->first();
+
+        $pdf = PDF::loadView('home.invoiceJasa-pdf', compact('servisJasa'));
+        return $pdf->download('invoiceLayanan_' . $servisJasa->order_id . '.pdf');
     }
 }

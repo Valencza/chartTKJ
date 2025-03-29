@@ -29,23 +29,27 @@
         <div class="container d-flex justify-content-center align-items-center">
             <div class="col-lg-10 col-md-10 col-11">
                 <div class="card shadow p-4">
-                    <img src="{{asset ('assets/user/img/digireads-assets/electronic-technician-holds-two-identical-smartphones-comparison-one-hand-broken-another-new.jpg') }}"
-                        alt="Servis Laptop & PC"
+                    <img src="{{ asset('storage/' . $portofolioDetail->gambar) }}"
+                        alt="{{ $portofolioDetail->nama }}"
                         class="img-fluid w-100 object-fit-cover mb-4 rounded"
                         style="max-height: 500px; height: auto;">
 
-                    <h3 class="fw-bold fs-lg-1 fs-md-2 fs-4">Proyek Servis Laptop & PC</h3>
+                    <h3 class="fw-bold fs-lg-1 fs-md-2 fs-4">{{ $portofolioDetail->nama }}</h3>
                     <p class="text-muted fs-lg-4 fs-md-5 fs-6">
-                        Kami telah menangani berbagai macam proyek perbaikan, upgrade, dan optimasi laptop serta PC untuk meningkatkan performa dan daya tahan perangkat.
+                        {{ $portofolioDetail->nama }}
                     </p>
 
                     <h5 class="mt-4 fw-bold fs-lg-3 fs-md-4 fs-5">Detail Pekerjaan:</h5>
                     <ul class="fs-lg-4 fs-md-5 fs-6">
-                        <li>Perbaikan hardware dan software</li>
-                        <li>Upgrade RAM & SSD</li>
-                        <li>Pembersihan dan penggantian thermal paste</li>
-                        <li>Optimasi performa sistem</li>
-                        <li>Dan masih banyak lagi.</li>
+                        @php $details = json_decode($portofolioDetail->detail, true); @endphp
+
+                        @if (is_array($details))
+                        @foreach ($details as $detail)
+                        <li>{{ ucfirst($detail) }}</li>
+                        @endforeach
+                        @else
+                        <li>Detail tidak tersedia</li>
+                        @endif
                     </ul>
 
                     <h5 class="mt-4 fw-bold fs-lg-3 fs-md-4 fs-5">Kenapa Memilih Kami?</h5>
@@ -56,7 +60,7 @@
                     <div class="mt-4">
                         <div class="col-lg-12 col-md-8 col-12">
                             <div class="d-lg-flex d-md-flex d-flex-none detail-pc align-items-center">
-                                <a href="{{route ('portfolio') }}" class="btn btn-primary d-flex align-items-center gap-2 me-lg-2 me-md-2 me-0 mb-lg-0 mb-md-0 mb-2">
+                                <a href="{{ route('portofolio.index') }}" class="btn btn-primary d-flex align-items-center gap-2 me-lg-2 me-md-2 me-0 mb-lg-0 mb-md-0 mb-2">
                                     <i class="bi bi-arrow-left-circle fs-5 ms-1"></i> Kembali
                                 </a>
                                 <a href="#" class="btn text-white d-flex align-items-center gap-2" style="background-color: #25D366;">

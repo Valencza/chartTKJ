@@ -37,7 +37,8 @@
                                 <th class="pe-3 min-w-150px ">Klien</th>
                                 <th class="pe-3 min-w-150px ">Tanggal</th>
                                 <th class="pe-3 min-w-150px">Lokasi</th>
-                                <th class="pe-3 min-w-400px">Deskripsi</th>>
+                                <th class="pe-3 min-w-400px">Deskripsi</th>
+                                <th class="pe-3 min-w-400px">Detail</th>
                                 <th class="text-center pe-3">Aksi</th>
                             </tr>
                         </thead>
@@ -61,7 +62,8 @@
                                 <td>{{ $portofolio->klien }}</td>
                                 <td>{{ $portofolio->tanggalProyek }}</td>
                                 <td>{{ $portofolio->lokasi }}</td>
-                                <td>{{ $portofolio->deskripsi }}</td>
+                                <td>{{ Str::limit($portofolio->deskripsi, 100) }}</td>
+                                <td>{{ $portofolio->detail ?? '-' }}</td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn btn-outline btn-outline-primary btn-active-light-primary btn-sm btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" data-bs-target="#editPortofolioModal" data-bs-toggle="modal">
                                         <i class="ki-duotone ki-pencil fs-2"></i>
@@ -96,7 +98,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{{route ('portofolio.store') }}" id="formTambahPortofolio" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('portofolio.store') }}" id="formTambahPortofolio" method="POST" enctype="multipart/form-data" novalidate>
                     @csrf
                     <!-- Upload Gambar -->
                     <div class="mb-3">
@@ -132,6 +134,18 @@
                     <div class="mb-3">
                         <label for="deskripsi" class="form-label">Deskripsi</label>
                         <textarea class="form-control" name="deskripsi" id="deskripsi" rows="3" placeholder="Masukkan Deskripsi Produk"></textarea>
+                    </div>
+
+                    <!-- Spesifikasi -->
+                    <div class="mb-3">
+                        <label for="detail" class="form-label">Detail</label>
+                        <div id="detail-container">
+                            <div class="d-flex mb-2 detail-group">
+                                <input type="text" class="form-control me-2" name="detail_key[]" placeholder="Detail (contoh: Perbaikan hardware dan software)">
+                                <button type="button" class="btn btn-danger remove-detail">X</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success mt-2" id="addDetail">+ Tambah Detail</button>
                     </div>
 
                     <div class="modal-footer">
@@ -197,6 +211,30 @@
                         <textarea class="form-control" name="deskripsi" id="deskripsi" rows="3" required>{{ old('deskripsi', $portofolio->deskripsi) }}</textarea>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="detail" class="form-label">Detail Pekerjaan</label>
+                        <div id="detail-container2">
+                            @php
+                            $details = old('detail', json_decode($portofolio->detail, true) ?? []);
+                            @endphp
+
+                            @if (!empty($details))
+                            @foreach ($details as $detail)
+                            <div class="d-flex mb-2">
+                                <input type="text" class="form-control me-2" name="detail_key[]" value="{{ $detail }}" placeholder="Detail (contoh: Perbaikan hardware dan software)">
+                                <button type="button" class="btn btn-danger remove-detail">X</button>
+                            </div>
+                            @endforeach
+                            @else
+                            <div class="d-flex mb-2">
+                                <input type="text" class="form-control me-2" name="detail_key[]" placeholder="Detail (contoh: Perbaikan hardware dan software)">
+                                <button type="button" class="btn btn-danger remove-detail">X</button>
+                            </div>
+                            @endif
+                        </div>
+                        <button type="button" class="btn btn-success" id="editDetail">+ Tambah Detail</button>
+                    </div>
+
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Batal</button>
@@ -214,6 +252,28 @@
 @stack('js')
 
 <!--js alert tambah data-->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("addDetail").addEventListener("click", function() {
+            let specContainer = document.getElementById("detail-container");
+            let newSpec = document.createElement("div");
+            newSpec.classList.add("d-flex", "mb-2");
+            newSpec.innerHTML = `
+            <input type="text" class="form-control me-2" name="detail_key[]" placeholder="Detail (contoh: Perbaikan hardware dan software)">
+            <button type="button" class="btn btn-danger remove-detail">X</button>
+        `;
+            specContainer.appendChild(newSpec);
+        });
+
+        document.getElementById("spesifikasi-container").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-detail")) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+
 <script>
     document.getElementById("formTambahPortofolio").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -224,17 +284,20 @@
         fetch("{{ route('portofolio.store') }}", {
                 method: "POST",
                 headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    "X-Requested-With": "XMLHttpRequest" // Penting untuk memberitahu Laravel bahwa ini adalah AJAX request
                 },
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+            .then(response => response.json().then(data => ({
+                status: response.status,
+                body: data
+            }))) // Ambil status kode
+            .then(result => {
+                if (result.status === 200) {
                     Swal.fire({
                         icon: "success",
                         title: "Berhasil!",
-                        text: "Data berhasil ditambahkan.",
+                        text: result.body.message,
                         confirmButtonText: "OK",
                         customClass: {
                             confirmButton: "btn btn-primary"
@@ -247,18 +310,44 @@
                         let modalInstance = bootstrap.Modal.getInstance(modalElement);
                         modalInstance.hide();
 
-                        // Reload data atau lakukan aksi tambahan
-                        location.reload();
+                        location.reload(); // Reload untuk memperbarui tabel
                     });
+                } else if (result.status === 422) {
+                    let errors = Object.values(result.body.errors).map(err => err.join("\n")).join("\n");
+                    Swal.fire("Validasi Gagal!", errors, "warning");
                 } else {
-                    Swal.fire("Gagal!", data.message, "error");
+                    Swal.fire("Gagal!", result.body.message || "Terjadi kesalahan pada server.", "error");
                 }
             })
             .catch(error => {
+                console.error("Fetch error:", error);
                 Swal.fire("Error!", "Terjadi kesalahan pada server.", "error");
             });
     });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("editDetail").addEventListener("click", function() {
+            let detailContainer = document.getElementById("detail-container2");
+            let newDetail = document.createElement("div");
+            newDetail.classList.add("d-flex", "mb-2");
+            newDetail.innerHTML = `
+            <input type="text" class="form-control me-2" name="detail_key[]" placeholder="Detail (contoh: Perbaikan hardware dan software)">
+                <button type="button" class="btn btn-danger remove-detail">X</button>
+                `;
+            detailContainer.appendChild(newDetail);
+        });
+
+        // Perbaikan di sini (pastikan elemen yang ditambahkan bisa dihapus)
+        document.getElementById("detail-container2").addEventListener("click", function(e) {
+            if (e.target.classList.contains("remove-detail")) {
+                e.target.parentElement.remove();
+            }
+        });
+    });
+</script>
+
 
 <script>
     document.querySelectorAll('.btn-edit').forEach(function(button) {

@@ -20,18 +20,18 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>Invoice #{{ $servis->order_id }}</h2>
-            <p>Tanggal: {{ $servis->created_at->format('d M Y') }}</p>
+            <h2>Invoice #{{ $servisJasa->order_id }}</h2>
+            <p>Tanggal: {{ $servisJasa->created_at->format('d M Y') }}</p>
         </div>
 
         <table class="table">
             <tr>
                 <th>Nama Pelanggan</th>
-                <td>{{ $servis->user->nama ?? 'Pelanggan' }}</td>
+                <td>{{ $servisJasa->user->nama ?? 'Pelanggan' }}</td>
             </tr>
             <tr>
                 <th>Email</th>
-                <td>{{ $servis->user->email ?? '-' }}</td>
+                <td>{{ $servisJasa->user->email ?? '-' }}</td>
             </tr>
         </table>
 
@@ -40,8 +40,7 @@
             <thead class="table-light">
                 <tr class="text-center">
                     <th style="width: 5%;">No</th>
-                    <th style="width: 25%;">Barang</th>
-                    <th style="width: 25%;">Kerusakan</th>
+                    <th style="width: 25%;">Layanan</th>
                     <th style="width: 15%;">Harga Jasa</th>
                     <th style="width: 25%;">Deskripsi</th>
                     <th style="width: 30%;">Total</th>
@@ -50,19 +49,18 @@
             <tbody>
                 @php
                 $subtotal = 0;
-                $diskon = $servis->diskon ?? 0;
-                $harga = $servis->harga ?? 0;
-                $harga_tambahan = $servis->harga_tambahan ?? 0;
+                $diskon = $servisJasa->diskon ?? 0;
+                $harga = $servisJasa->harga ?? 0;
+                $harga_tambahan = $servisJasa->harga_tambahan ?? 0;
                 $total = $harga + $harga_tambahan;
                 $subtotal += $total;
                 @endphp
 
                 <tr>
                     <td class="text-center">1</td>
-                    <td>{{ $servis->jenisBarang->nama ?? '-' }}</td>
-                    <td>{{ $servis->jenisKerusakan->nama ?? '-' }}</td>
+                    <td>{{ $servisJasa->jenisJasa->nama ?? '-' }}</td>
                     <td class="text-end">Rp {{ number_format($harga, 0, ',', '.') }}</td>
-                    <td>{{ $servis->kerusakan ?? '-' }}</td>
+                    <td>{{ $servisJasa->deskripsi ?? '-' }}</td>
                     <td class="text-end">Rp {{ number_format($total, 0, ',', '.') }}</td>
                 </tr>
 

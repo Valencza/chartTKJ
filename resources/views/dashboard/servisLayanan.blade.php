@@ -48,7 +48,7 @@
                                 </td>
                                 <td>Rp. {{ number_format($jasa->harga, 0, ',', '.') }}</td>
                                 <td>
-                                    <span class="badge bg-{{ $jasa->status == 'completed' ? 'success' : ($jasa->status == 'pending' ? 'warning' : 'danger') }}">
+                                    <span class="badge bg-{{ $jasa->status == 'paid' ? 'success' : ($jasa->status == 'pending' ? 'warning' : 'danger') }}">
                                         {{ ucfirst($jasa->status) }}
                                     </span>
                                 </td>

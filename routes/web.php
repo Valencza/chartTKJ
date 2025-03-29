@@ -1,14 +1,22 @@
 <?php
 
+use App\Http\Controllers\AdminEditRoleController;
 use App\Http\Controllers\AdminOrderController;
+use App\Http\Controllers\AdminPortofolioController;
 use App\Http\Controllers\adminServiceBarangController;
+use App\Http\Controllers\AdminServisBarangPetugasController;
 use App\Http\Controllers\AdminservisLayananController;
+use App\Http\Controllers\AdminServisLayananPetugasController;
+use App\Http\Controllers\AdminUlasanController;
+use App\Http\Controllers\AdminUlasanProdukController;
+use App\Http\Controllers\AdminUlasanUserController;
 use App\Http\Controllers\AlamatController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\InformasiTanggalController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\jasaLayananController;
 use App\Http\Controllers\jenisBarangController;
@@ -28,9 +36,15 @@ use App\Http\Controllers\serviceController;
 use App\Http\Controllers\servisBarangPetugasController;
 use App\Http\Controllers\servisLayananController;
 use App\Http\Controllers\UlasanController;
+use App\Http\Controllers\UlasanUserController;
 use App\Models\jenisLayanan;
 use App\Models\servisBarangPetugas;
 use Illuminate\Support\Facades\Route;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 //auth
 
@@ -51,6 +65,8 @@ Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']
 Route::get('/', function () {
     return view('home.index');
 })->name('index');
+
+Route::post('/ulasan-user', [UlasanUserController::class, 'store'])->name('storeUlasanUser');
 
 //home.pembelian
 
@@ -109,27 +125,28 @@ Route::get('/service', [serviceController::class, 'index'])->name('service');
 
 Route::get('/get-kerusakan/{barang_id}', [serviceController::class, 'getJenisKerusakan']);
 Route::post('/service/store/barang', [serviceController::class, 'storeServisBarang'])->name('serviceBarang.store');
-Route::get('/invoice/{order_id}', [serviceController::class, 'showInvoice'])->name('serviceBarang.invoice');
-Route::get('/payment-callback', [serviceController::class, 'paymentCallback'])->name('serviceBarang.paymentCallback');
+Route::get('/invoice-servis/{order_id}', [serviceController::class, 'showInvoiceServis'])->name('serviceBarang.invoice');
+Route::get('/payment-callback-servis', [serviceController::class, 'paymentCallbackServis'])->name('serviceBarang.paymentCallback');
 Route::get('/invoice/{order_id}/download', [serviceController::class, 'downloadInvoiceServisBarang'])->name('serviceBarang.download');
 
 Route::get('/get-layanan/{layanan_id}', [serviceController::class, 'getJenisLayanan']);
 Route::post('/service/store/layanan', [serviceController::class, 'storeServisLayanan'])->name('serviceLayanan.store');
+Route::get('/invoice-layanan/{order_id}', [serviceController::class, 'showInvoiceLayanan'])->name('serviceLayanan.invoice');
+Route::get('/payment-callback-layanan', [serviceController::class, 'paymentCallbackLayanan'])->name('serviceLayanan.paymentCallback');
+Route::get('/invoice-layanan/{order_id}/download', [serviceController::class, 'downloadInvoiceServisLayanan'])->name('serviceLayanan.download');
 
+//home.portofolio
+
+Route::get('/portofolio', [PortofolioController::class, 'index'])->name('portofolio.index');
+Route::get('/portofolio/{slug}', [PortofolioController::class, 'detailportfolio'])->name('portofolio.detail');
 
 
 //home.riwayat
 
 Route::get('/riwayat', [RiwayatController::class, 'showPaidOrders'])->name('riwayat');
-
-Route::get('/portofolio', function () {
-    return view('home.portofolio');
-})->name('portfolio');
-
-Route::get('/detail-portofolio', function () {
-    return view('home.detail-portofolio');
-})->name('detail-portofolio');
-
+Route::get('/invoice/barang', [RiwayatController::class, 'showInvoiceBarang'])->name('invoice.barang');
+Route::get('/invoice/servis/{order_id}', [RiwayatController::class, 'showInvoiceServis'])->name('invoice.servis');
+Route::get('/invoice/jasa/{order_id}', [RiwayatController::class, 'showInvoiceJasa'])->name('invoice.jasa');
 
 //dashboard
 
@@ -139,12 +156,81 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 // Route untuk mengambil data pendapatan grafik
 Route::get('/api/get-pendapatan-grafik', [DashboardController::class, 'getPendapatanGrafik']);
 
+Route::get('/api/get-servisproduk-by-date', function (Request $request) {
+    $date = Carbon::parse($request->query('date'))->format('Y-m-d');
+
+    if (!$date) {
+        return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
+    }
+
+    try {
+        $data = DB::table('order_items')
+            ->whereDate('created_at', $date)
+            ->sum('subtotal');
+
+        return response()->json([
+            'labels' => [$date],
+            'data' => [$data]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+Route::get('/api/get-servisbarang-grafik', [DashboardController::class, 'getPendapatanServis']);
+
+Route::get('/api/get-servisbarang-by-date', function (Request $request) {
+    $date = Carbon::parse($request->query('date'))->format('Y-m-d');
+
+    if (!$date) {
+        return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
+    }
+
+    try {
+        $data = DB::table('servis_barang')
+            ->whereDate('created_at', $date)
+            ->sum('harga');
+
+        return response()->json([
+            'labels' => [$date],
+            'data' => [$data]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+Route::get('/api/get-servislayanan-grafik', [DashboardController::class, 'getPendapatanLayanan']);
+
+Route::get('/api/get-servislayanan-by-date', function (Request $request) {
+    $date = Carbon::parse($request->query('date'))->format('Y-m-d');
+
+    if (!$date) {
+        return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
+    }
+
+    try {
+        $data = DB::table('servis_jasa')
+            ->whereDate('created_at', $date)
+            ->sum('harga');
+
+        return response()->json([
+            'labels' => [$date],
+            'data' => [$data]
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
 //dashboard.produk
 
 Route::get('/dashboard/produk', [ProdukController::class, 'index'])->name('produk');
 Route::post('/dashboard/produk/store', [ProdukController::class, 'store'])->name('produk.store');
 Route::put('/dashboard/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
 Route::delete('/dashboard/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
+
+Route::get('/get-product/{id}', [ProdukController::class, 'getProduct']);
 
 //dashboard.kategori-produk
 
@@ -192,11 +278,30 @@ Route::get('/order-servis-barang', [adminServiceBarangController::class, 'index'
 Route::put('/order-servis-barang/{id}', [adminServiceBarangController::class, 'update'])->name('orderServisBarang.update');
 Route::post('/order-servis-barang', [adminServiceBarangController::class, 'petugas'])->name('orderServisBarang.petugas');
 
+//dashboard.servis-barang-petugas
+
+Route::get('/order-servis-barang-petugas', [AdminServisBarangPetugasController::class, 'index'])->name('servisBarangPetugas');
+Route::put('/order-servis-barang-petugas/{id}', [AdminServisBarangPetugasController::class, 'update'])->name('servisBarangPetugas.update');
+
+//dashboard.servis-layanan-petugas
+
+Route::get('/order-servis-layanan-petugas', [AdminServisLayananPetugasController::class, 'index'])->name('servisLayananPetugas');
+Route::put('/order-servis-layanan-petugas/{id}', [AdminServisLayananPetugasController::class, 'update'])->name('servisLayananPetugas.update');
+
 //dashboard.order-servis-layanan
 
 Route::get('/dashboard/servis-layanan', [AdminservisLayananController::class, 'index'])->name('orderServisLayanan');
 Route::put('/dashboard/servis-layanan/{id}', [AdminservisLayananController::class, 'update'])->name('orderServisLayanan.update');
 Route::post('/dashboard/servis-layanan', [AdminservisLayananController::class, 'petugas'])->name('orderServisLayanan.petugas');
+
+//dashboard.informasi-tanggal
+
+Route::prefix('dashboard/informasi-tanggal')->controller(InformasiTanggalController::class)->group(function () {
+    Route::get('/', 'index')->name('informasi-tanggal.index'); // Ganti dari 'informasiTanggal' ke 'index'
+    Route::put('/terima/{id}', 'updateDiterima')->name('informasi-tanggal.terima'); // Sesuai method di controller
+    Route::put('/serahkan/{id}', 'updateDiserahkan')->name('informasi-tanggal.serahkan'); // Sesuai method di controller
+});
+
 
 //dashboard.portofolio
 
@@ -204,6 +309,28 @@ Route::get('/dashboard/portofolio', [PortofolioController::class, 'index'])->nam
 Route::post('/dashboard/portofolio/store', [PortofolioController::class, 'store'])->name('portofolio.store');
 Route::put('/dashboard/portofolio/{id}', [PortofolioController::class, 'update'])->name('portofolio.update');
 Route::delete('/dashboard/portofolio/{id}', [PortofolioController::class, 'destroy'])->name('portofolio.destroy');
+
+//dashboard.user-role
+
+Route::get('/dashboard/user', [AdminEditRoleController::class, 'index'])->name('user');
+Route::put('/dashboard/user/{id}', [AdminEditRoleController::class, 'update'])->name('user.update');
+
+//dashboard.ulasan-produk
+
+Route::get('/dashboard/ulasan-produk', [AdminUlasanProdukController::class, 'index'])->name('ulasan');
+Route::delete('/dashboard/ulasan-produk/{id}', [AdminUlasanProdukController::class, 'destroy'])->name('ulasan.destroy');
+
+//dashboard.ulasan-pengguna
+
+Route::get('/dashboard/ulasan-pengguna', [AdminUlasanUserController::class, 'index'])->name('ulasanUser');
+Route::delete('/dashboard/ulasan-pengguna/{id}', [AdminUlasanUserController::class, 'destroy'])->name('ulasanUser.destroy');
+
+//dashboard.portofolio
+
+Route::get('/dashboard/portofolio', [AdminPortofolioController::class, 'index'])->name('portofolio');
+Route::post('/dashboard/portofolio/store', [AdminPortofolioController::class, 'store'])->name('portofolio.store');
+Route::put('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'update'])->name('portofolio.update');
+Route::delete('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'destroy'])->name('portofolio.destroy');
 
 //laravelPWA
 

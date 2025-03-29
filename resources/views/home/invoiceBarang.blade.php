@@ -279,9 +279,13 @@
                 </div>
             </div>
         </div>
-        <div class="d-flex justify-content-end mt-3">
+        <div class="d-flex justify-content-between mt-5">
+            <a href="{{ route('riwayat') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
+
             <a href="{{ route('invoice.download', $order->id) }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
-                <i class="bi bi-download me-1"></i> Download PDF
+                <i class="bi bi-download me-1"></i> Cetak Invoice
             </a>
         </div>
     </section>

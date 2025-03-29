@@ -211,7 +211,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-6 text-lg-end text-end mb-lg-4 mb-md-5 mb-4 invoice">
                                 <p class="fw-bold fs-lg-4 fs-md-4 fs-custom mb-0 judul-invoice">INVOICE JASA</p>
-                                <p class="text-muted date">Tanggal : <span> {{ date('d-m-Y', strtotime($jasa->created_at)) }} </span></p>
+                                <p class="text-muted date">Tanggal : <span> {{ date('d-m-Y', strtotime($servisJasa->created_at)) }} </span></p>
                             </div>
                         </div>
 
@@ -223,10 +223,10 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-6 text-lg-end text-end mb-5">
                                 <p class="fw-bold judul-2">Dipesan oleh:</p>
-                                <p class="mb-0 user">Nama : {{ $jasa->nama ?? 'Pelanggan' }}</p>
-                                <p class="mb-0 user">Email : {{ $jasa->user->email ?? '-' }}</p>
-                                <p class="mb-0 user">Email : {{ $jasa->alamat ?? '-' }}</p>
-                                <p class="mb-0 user">Email : {{ $jasa->telepon ?? '-' }}</p>
+                                <p class="mb-0 user">Nama : {{ $servisJasa->nama ?? 'Pelanggan' }}</p>
+                                <p class="mb-0 user">Email : {{ $servisJasa->user->email ?? '-' }}</p>
+                                <p class="mb-0 user">Alamat : {{ $servisJasa->alamat ?? '-' }}</p>
+                                <p class="mb-0 user">No. Telp : {{ $servisJasa->telepon ?? '-' }}</p>
                             </div>
                         </div>
 
@@ -237,24 +237,24 @@
                                         <th style="width: 5%;">No</th>
                                         <th style="width: 25%;">Layanan</th>
                                         <th style="width: 25%;">Deskripsi</th>
-                                        <th style="width: 15%;">Harga Jasa</th>
+                                        <th style="width: 12;">Harga Jasa</th>
                                         <th style="width: 30%;">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
                                     $subtotal = 0;
-                                    $diskon = $jasa->diskon ?? 0; // Pastikan diskon memiliki nilai default 0
-                                    $harga = $jasa->harga ?? 0; // Ambil harga dari jasa
-                                    $harga_tambahan = $jasa->harga_tambahan ?? 0; // Ambil harga tambahan dari jasa
+                                    $diskon = $servisJasa->diskon ?? 0; // Pastikan diskon memiliki nilai default 0
+                                    $harga = $servisJasa->harga ?? 0; // Ambil harga dari servisJasa
+                                    $harga_tambahan = $servisJasa->harga_tambahan ?? 0; // Ambil harga tambahan dari servisJasa
                                     $total = $harga + $harga_tambahan;
                                     $subtotal += $total;
                                     @endphp
 
                                     <tr>
-                                        <td class="text-center">1</td> <!-- Jika hanya ada satu jasa, tidak perlu perulangan -->
-                                        <td>{{ $jasa->jenisJasa->nama ?? '-' }}</td>
-                                        <td>{{ $jasa->deskripsi ?? '-' }}</td>
+                                        <td class="text-center">1</td>
+                                        <td>{{ $servisJasa->jenisJasa->nama ?? '-' }}</td>
+                                        <td>{{ $servisJasa->deskripsi ?? '-' }}</td>
                                         <td class="text-end">Rp {{ number_format($harga, 0, ',', '.') }}</td>
                                         <td class="text-end">Rp {{ number_format($total, 0, ',', '.') }}</td>
                                     </tr>
@@ -290,10 +290,17 @@
             </div>
         </div>
         <div class="d-flex justify-content-between mt-5">
-            <a href="{{route ('service') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
+            @if($source === 'service')
+            <a href="{{ route('service') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
                 <i class="bi bi-arrow-left me-1"></i> Kembali
             </a>
-            <a href="{{route ('serviceLayanan.download', $jasa->order_id) }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
+            @else
+            <a href="{{ route('riwayat') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
+            @endif
+
+            <a href="{{route ('serviceLayanan.download', $servisJasa->order_id) }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
                 <i class="bi bi-printer me-1"></i> Cetak Invoice
             </a>
         </div>

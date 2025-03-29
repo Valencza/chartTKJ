@@ -290,9 +290,16 @@
             </div>
         </div>
         <div class="d-flex justify-content-between mt-5">
-            <a href="{{route ('service') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
+            @if($source === 'service')
+            <a href="{{ route('service') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
                 <i class="bi bi-arrow-left me-1"></i> Kembali
             </a>
+            @else
+            <a href="{{ route('riwayat') }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
+                <i class="bi bi-arrow-left me-1"></i> Kembali
+            </a>
+            @endif
+
             <a href="{{route ('serviceBarang.download', $servis->order_id) }}" class="btn btn-primary py-lg-3 py-md-3 py-3 px-lg-4 px-md-3 px-3">
                 <i class="bi bi-printer me-1"></i> Cetak Invoice
             </a>

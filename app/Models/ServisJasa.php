@@ -30,6 +30,11 @@ class ServisJasa extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function petugas()
+    {
+        return $this->hasOneThrough(User::class, servisLayananPetugas::class, 'servis_layanan_id', 'id', 'id', 'petugas_id');
+    }
+
     public function servisLayananPetugas()
     {
         return $this->hasOne(servisLayananPetugas::class, 'servis_layanan_id');

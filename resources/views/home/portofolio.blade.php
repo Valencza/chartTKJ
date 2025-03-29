@@ -49,15 +49,17 @@
 
                 <!-- Daftar Kartu Proyek -->
                 <div id="cardContainer" class="row">
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
+
+                    @foreach ($portofolios as $index => $portofolio)
+                    <div class="col-lg-4 col-md-6 col-12 mb-4 portfolio-item {{ $index >= 6 ? 'd-none' : '' }}">
                         <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/electronic-technician-holds-two-identical-smartphones-comparison-one-hand-broken-another-new.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
+                            <img src="{{ asset('storage/' . $portofolio->gambar) }}" class=" img-fluid" alt="{{ $portofolio->nama }}">
                             <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Servis Laptop & PC</h5>
-                                <p class="text-muted">Kami telah menangani berbagai macam proyek perbaikan, upgrade, dan optimasi laptop serta PC untuk meningkatkan performa dan daya tahan perangkat.</p>
+                                <h5 class="" style="font-weight: 700;">{{ $portofolio->nama }}</h5>
+                                <p class="text-muted">{{ Str::limit($portofolio->deskripsi, 100) }}</p>
                                 <div class="read-more d-flex justify-content-end">
                                     <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                                        <a href="{{ route('portofolio.detail', $portofolio->slug) }}" class="btn btn-primary d-flex align-items-center gap-2">
                                             Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
                                         </a>
                                     </div>
@@ -65,193 +67,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/top-view-wi-fi-router-with-laptop-hand-holding-smartphone.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Instalasi Jaringan</h5>
-                                <p class="text-muted">Pengalaman dalam pemasangan dan konfigurasi jaringan, baik untuk perkantoran, bisnis, maupun rumah, dengan hasil yang stabil dan aman.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/modern-data-center-providing-cloud-services-enabling-businesses-access-computing-resources-storage-demand-internet-server-room-infrastructure-3d-render-animation.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Maintenance Server</h5>
-                                <p class="text-muted">Kami menangani pemeliharaan server, termasuk optimasi, pembaruan sistem, serta peningkatan keamanan untuk memastikan performa tetap optimal.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/portrait-female-working.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Perbaikan Hardware Komputer</h5>
-                                <p class="text-muted">Berbagai macam masalah perangkat keras seperti motherboard, RAM, hard disk, dan komponen lainnya telah berhasil kami tangani dengan solusi terbaik.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/criminal-hacking-system-unsuccessfully.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Pengaturan Keamanan Jaringan</h5>
-                                <p class="text-muted">Kami selalu Menerapkan sistem keamanan jaringan, firewall, serta enkripsi data untuk melindungi sistem dari serangan siber dan adanya kebocoran informasi.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/html-css-collage-concept-with-person.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Instalasi & Konfigurasi Software</h5>
-                                <p class="text-muted">Instalasi sistem operasi,Instalasi sistem operasi, perangkat lunak profesional, serta optimasi software untuk mendukung kebutuhan kerja dan produktivitas pengguna.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Kartu yang disembunyikan -->
-                    <div class="col-lg-4 col-md-6 col-12 mb-4 hidden">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/electronic-technician-holds-two-identical-smartphones-comparison-one-hand-broken-another-new.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Servis Laptop & PC</h5>
-                                <p class="text-muted">Kami telah menangani berbagai macam proyek perbaikan, upgrade, dan optimasi laptop serta PC untuk meningkatkan performa dan daya tahan perangkat.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4 hidden">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/top-view-wi-fi-router-with-laptop-hand-holding-smartphone.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Instalasi Jaringan</h5>
-                                <p class="text-muted">Pengalaman dalam pemasangan dan konfigurasi jaringan, baik untuk perkantoran, bisnis, maupun rumah, dengan hasil yang stabil dan aman.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4 hidden">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/modern-data-center-providing-cloud-services-enabling-businesses-access-computing-resources-storage-demand-internet-server-room-infrastructure-3d-render-animation.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Maintenance Server</h5>
-                                <p class="text-muted">Kami menangani pemeliharaan server, termasuk optimasi, pembaruan sistem, serta peningkatan keamanan untuk memastikan performa tetap optimal.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4 hidden">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/portrait-female-working.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Perbaikan Hardware Komputer</h5>
-                                <p class="text-muted">Berbagai macam masalah perangkat keras seperti motherboard, RAM, hard disk, dan komponen lainnya telah berhasil kami tangani dengan solusi terbaik.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4 hidden">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/criminal-hacking-system-unsuccessfully.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Pengaturan Keamanan Jaringan</h5>
-                                <p class="text-muted">Kami selalu Menerapkan sistem keamanan jaringan, firewall, serta enkripsi data untuk melindungi sistem dari serangan siber dan adanya kebocoran informasi.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12 mb-4 hidden">
-                        <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/html-css-collage-concept-with-person.jpg') }}" class=" img-fluid" alt="Servis Laptop & PC">
-                            <div class="card-body" style="height: auto;">
-                                <h5 class="" style="font-weight: 700;">Proyek Instalasi & Konfigurasi Software</h5>
-                                <p class="text-muted">Instalasi sistem operasi,Instalasi sistem operasi, perangkat lunak profesional, serta optimasi software untuk mendukung kebutuhan kerja dan produktivitas pengguna.</p>
-                                <div class="read-more d-flex justify-content-end">
-                                    <div class="d-flex detail-pc align-items-center">
-                                        <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
-                                            Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
+
                 </div>
 
                 <!-- Tombol "Lihat Lebih Banyak" -->
+                @if ($portofolios->count() > 3)
                 <div class="col-12 mb-lg-4 mb-md-4 mb-5 mt-3">
                     <div class="d-flex align-items-center justify-content-center">
-                        <button id="loadMore" class="btn btn-primary rounded-pill d-flex align-items-center gap-2 py-3 px-4" style="font-weight: 500;">
+                        <button id="showMoreBtn" class="btn btn-primary rounded-pill d-flex align-items-center gap-2 py-3 px-4" style="font-weight: 500;">
                             Lihat Lebih Banyak <i class="bi bi-arrow-right-circle fs-5"></i>
                         </button>
                     </div>
                 </div>
+                @endif
+
             </div>
         </div>
     </section>
@@ -260,55 +90,49 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".card-body p").forEach(function(p) {
-            let words = p.innerText.split(" "); // Memisahkan teks menjadi array kata
-            if (words.length > 19) { // Jika lebih dari 19 kata
-                p.innerText = words.slice(0, 19).join(" ") + "..."; // Potong ke 19 kata + "..."
-            }
-        });
-    });
-</script>
+        let showMoreBtn = document.getElementById("showMoreBtn");
+        let clickCount = 0; // Counter untuk jumlah klik tombol
 
+        if (showMoreBtn) {
+            showMoreBtn.addEventListener("click", function() {
+                let hiddenItems = document.querySelectorAll(".portfolio-item.d-none"); 
+                let count = 0;
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let cards = document.querySelectorAll("#cardContainer .col-lg-4, #cardContainer .col-md-6, #cardContainer .col-12");
-        let index = 6; // Awalnya tampilkan 3 kartu pertama
+                hiddenItems.forEach((item) => {
+                    if (count < 3) { 
+                        item.classList.remove("d-none");
+                        count++;
+                    }
+                });
 
-        // Sembunyikan kartu kecuali 3 pertama
-        cards.forEach((card, i) => {
-            if (i >= index) {
-                card.classList.add("hidden");
-            }
-        });
+                clickCount++; // Tambahkan hitungan klik
 
-        function showNextCards() {
-            let count = 0;
-            for (let i = index; i < cards.length && count < 3; i++) {
-                cards[i].classList.remove("hidden");
-                index++;
-                count++;
-            }
+                setTimeout(function() {
+                    let remainingHiddenItems = document.querySelectorAll(".portfolio-item.d-none");
 
-            // Auto-scroll ke kartu terakhir yang baru muncul
-            cards[index - 1].scrollIntoView({
-                behavior: "smooth",
-                block: "end"
+                    if (remainingHiddenItems.length === 0 && clickCount > 1) {
+                        // **SweetAlert muncul hanya setelah tombol diklik dua kali saat semua data terlihat**
+                        Swal.fire({
+                            title: 'Semua Portofolio Terlihat',
+                            text: 'Tidak ada lagi portofolio yang tersembunyi.',
+                            icon: 'success',
+                            confirmButtonText: 'Oke',
+                            customClass: {
+                                confirmButton: 'btn btn-primary'
+                            }
+                        });
+
+                        // **Hapus event listener agar tombol tidak bisa diklik lagi**
+                        showMoreBtn.removeEventListener("click", arguments.callee);
+                    }
+                }, 100); 
             });
-
-            // Sembunyikan tombol jika semua kartu sudah muncul
-            if (index >= cards.length) {
-                document.getElementById("loadMore").style.display = "none";
-            }
         }
-
-        // Event tombol "Lihat Lebih Banyak"
-        document.getElementById("loadMore").addEventListener("click", showNextCards);
     });
 </script>
-
 
 <script>
     document.querySelectorAll('.dropdown-toggle').forEach(function(dropdown) {

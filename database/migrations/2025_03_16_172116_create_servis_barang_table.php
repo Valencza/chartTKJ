@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('jenis_kerusakan_id')->constrained('jenis_kerusakan')->onDelete('cascade'); // Relasi ke jenis_kerusakan
             $table->string('telepon');
             $table->text('kerusakan')->nullable(); // Sesuai dengan controller
-            $table->date('tanggal'); // Sesuai dengan controller
             $table->integer('harga');
             $table->string('status');
             $table->timestamps();

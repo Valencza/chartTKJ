@@ -21,6 +21,13 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Di model Item
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'produk_id');
+    }
+
+
     // Jika Order memiliki relasi dengan model Pembeli
     public function pembeli()
     {

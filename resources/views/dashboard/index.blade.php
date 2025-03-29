@@ -7,7 +7,7 @@
 
         <div class="container mt-5">
             <div class="row">
-                <div class="col-xl-4 col-md-6 mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card shadow-sm p-5 border-0 d-flex flex-column h-100">
                         <div class="d-flex align-items-center">
                             <div class="me-4 p-5" style="background-color:rgb(220, 239, 255)">
@@ -16,8 +16,8 @@
                             <div>
                                 <h5 class="fw-bold text-primary">Pendapatan Pembelian</h5>
                                 <!-- Menampilkan total pendapatan dalam format Rupiah -->
-                                @if(isset($totalPendapatan) && $totalPendapatan > 0)
-                                <h3 class="fw-bold">Rp {{ number_format($totalPendapatan, 0, ',', '.') }}</h3>
+                                @if(isset($totalPendapatanProduk) && $totalPendapatanProduk > 0)
+                                <h3 class="fw-bold">Rp {{ number_format($totalPendapatanProduk, 0, ',', '.') }}</h3>
                                 @else
                                 <h3 class="fw-bold">Rp 0</h3>
                                 @endif
@@ -27,7 +27,7 @@
                         <div class="mt-auto"></div>
                     </div>
                 </div>
-                <div class="col-xl-4 col-md-6 mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card shadow-sm p-5 border-0 d-flex flex-column h-100">
                         <div class="d-flex align-items-center">
                             <div class="me-4 p-5" style="background-color:rgb(220, 239, 255)">
@@ -35,7 +35,11 @@
                             </div>
                             <div>
                                 <h5 class="fw-bold text-primary">Pendapatan Servis Jasa</h5>
-                                <h3 class="fw-bold">Rp 8.700.000</h3>
+                                @if(isset($totalPendapatanServis) && $totalPendapatanServis > 0)
+                                <h3 class="fw-bold">Rp {{ number_format($totalPendapatanServis, 0, ',', '.') }}</h3>
+                                @else
+                                <h3 class="fw-bold">Rp 0</h3>
+                                @endif
                                 <p class="text-muted mb-0">Total pendapatan bulan ini</p>
                             </div>
                         </div>
@@ -43,7 +47,7 @@
                     </div>
                 </div>
                 <!-- Total Layanan Barang -->
-                <div class="col-xl-4 col-md-12 mb-4">
+                <div class="col-xl-3 col-md-12 mb-4">
                     <div class="card shadow-sm p-5 border-0 d-flex flex-column h-100">
                         <div class="d-flex align-items-center">
                             <div class="me-4 p-5" style="background-color:rgb(220, 239, 255)">
@@ -51,7 +55,31 @@
                             </div>
                             <div>
                                 <h5 class="fw-bold text-primary">Pendapatan Servis Barang</h5>
-                                <h3 class="fw-bold">Rp 21.200.000</h3>
+                                @if(isset($totalPendapatanJasa) && $totalPendapatanJasa > 0)
+                                <h3 class="fw-bold">Rp {{ number_format($totalPendapatanJasa, 0, ',', '.') }}</h3>
+                                @else
+                                <h3 class="fw-bold">Rp 0</h3>
+                                @endif
+                                <p class="text-muted mb-0">Total pendapatan bulan ini</p>
+                            </div>
+                        </div>
+                        <div class="mt-auto"></div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card shadow-sm p-5 border-0 d-flex flex-column h-100">
+                        <div class="d-flex align-items-center">
+                            <div class="me-4 p-5" style="background-color:rgb(220, 239, 255)">
+                                <i class="bi bi-cash-stack text-primary fs-1"></i>
+                            </div>
+                            <div>
+                                <h5 class="fw-bold text-primary">Pendapatan Keseluruhan Bulan Ini</h5>
+                                <!-- Menampilkan total pendapatan keseluruhan dalam format Rupiah -->
+                                @if(isset($totalPendapatanKeseluruhan) && $totalPendapatanKeseluruhan > 0)
+                                <h3 class="fw-bold">Rp {{ number_format($totalPendapatanKeseluruhan, 0, ',', '.') }}</h3>
+                                @else
+                                <h3 class="fw-bold">Rp 0</h3>
+                                @endif
                                 <p class="text-muted mb-0">Total pendapatan bulan ini</p>
                             </div>
                         </div>
@@ -102,7 +130,7 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-start filter-container mb-5">
-                                <select id="filterGrafikServis" class="form-select w-auto">
+                                <select id="filterServis" class="form-select w-auto">
                                     <option value="year">1 Tahun</option>
                                     <option value="month">Bulan Ini</option>
                                     <option value="last_month">Bulan Lalu</option>
@@ -113,7 +141,7 @@
                             </div>
                         </div>
                         <div class="chart-container">
-                            <canvas id="chartServis"></canvas>
+                            <canvas id="chartServis" style="min-width: 600px; max-height: 300px;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -131,7 +159,7 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-start filter-container mb-5">
-                                <select id="filterGrafikJasa" class="form-select w-auto">
+                                <select id="filterJasa" class="form-select w-auto">
                                     <option value="year">1 Tahun</option>
                                     <option value="month">Bulan Ini</option>
                                     <option value="last_month">Bulan Lalu</option>
@@ -205,9 +233,9 @@
                                 },
                                 y: {
                                     beginAtZero: true,
-                                    max: 20000000,
+                                    max: 5000000,
                                     ticks: {
-                                        stepSize: 5000000,
+                                        stepSize: 500000,
                                         font: {
                                             size: responsiveFontSize()
                                         },
@@ -259,9 +287,14 @@
 
                 customDate.addEventListener("change", function() {
                     if (this.value) {
-                        const labels = [this.value];
-                        const data = [Math.floor(Math.random() * 10000000) + 5000000];
-                        generateChart(labels, data);
+                        fetch(`/api/get-servisproduk-by-date?date=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("Custom Date Data:", data); // Debugging
+                                if (chartTransaksi) chartTransaksi.destroy();
+                                generateChart(data.labels, data.data); // Sesuai format Chart.js
+                            })
+                            .catch(error => console.error("Error fetching custom date data:", error));
                     }
                 });
 
@@ -279,54 +312,50 @@
         <!-- js grafik layanan servis barang -->
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                const canvas = document.getElementById("chartServis");
-                if (!canvas) {
-                    console.error("Canvas tidak ditemukan!");
-                    return;
-                }
-
-                const ctx = canvas.getContext("2d");
-                let chartServis;
+                const ctx = document.getElementById("chartServis").getContext("2d");
+                let chartTransaksi;
+                const filterServis = document.getElementById("filterServis"); // Ganti nama variabel
+                const customDateServis = document.getElementById("customDateServis");
 
                 function responsiveFontSize() {
                     if (window.innerWidth <= 480) return 6;
+                    if (window.innerWidth <= 500) return 7;
                     if (window.innerWidth <= 768) return 10;
                     return 12;
                 }
 
                 function generateChart(labels, data) {
-                    if (chartServis) {
-                        chartServis.destroy();
+                    if (chartTransaksi) {
+                        chartTransaksi.destroy();
                     }
 
-                    chartServis = new Chart(ctx, {
+                    chartTransaksi = new Chart(ctx, {
                         type: "bar",
                         data: {
                             labels: labels,
                             datasets: [{
                                 label: "Pendapatan (Rp)",
                                 data: data,
-                                backgroundColor: "#a0d0ff",
+                                backgroundColor: "#74a0ff",
                                 borderRadius: 5,
-                                borderSkipped: false
                             }]
                         },
                         options: {
                             responsive: true,
-                            maintainAspectRatio: false, // Supaya grafik tidak gepeng
+                            maintainAspectRatio: false,
                             layout: {
                                 padding: {
-                                    left: 5,
-                                    right: 5,
-                                    top: 10,
-                                    bottom: 5
+                                    left: 10,
+                                    right: 10,
+                                    top: 20,
+                                    bottom: 10
                                 }
                             },
                             scales: {
                                 x: {
                                     ticks: {
                                         autoSkip: true,
-                                        maxRotation: 30,
+                                        maxRotation: 45,
                                         font: {
                                             size: responsiveFontSize()
                                         }
@@ -334,9 +363,9 @@
                                 },
                                 y: {
                                     beginAtZero: true,
-                                    max: 20000000,
+                                    suggestedMax: 1000000,
                                     ticks: {
-                                        stepSize: 5000000,
+                                        stepSize: 100000,
                                         font: {
                                             size: responsiveFontSize()
                                         },
@@ -368,54 +397,50 @@
                 }
 
                 function updateChart(filter) {
-                    let labels, data;
-
-                    if (filter === "week") {
-                        labels = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
-                        data = [5000000, 4200000, 4500000, 4800000, 5000000, 5200000, 5300000];
-                    } else if (filter === "month" || filter === "last_month") {
-                        labels = Array.from({
-                            length: 31
-                        }, (_, i) => `tgl ${i + 1}`);
-                        data = Array.from({
-                            length: 31
-                        }, () => Math.floor(Math.random() * 7000000) + 5000000);
-                    } else if (filter === "year") {
-                        labels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-                        data = [12000000, 10500000, 13500000, 14000000, 12500000, 15000000, 15500000, 16000000, 14500000, 13500000, 14000000, 17000000];
-                    }
-
-                    generateChart(labels, data);
+                    fetch(`/api/get-servisbarang-grafik?filter=${filter}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Data API:", data);
+                            if (data.labels && data.data) {
+                                generateChart(data.labels, data.data);
+                            } else {
+                                console.error("Data dari API tidak valid");
+                            }
+                        })
+                        .catch(error => console.error("Error fetch data:", error));
                 }
 
-                document.getElementById("filterGrafikServis").addEventListener("change", function() {
+                filterServis.addEventListener("change", function() { // Ubah event listener ke filterServis
                     const selectedFilter = this.value;
-                    const customDateInput = document.getElementById("customDateServis");
 
                     if (selectedFilter === "custom") {
-                        customDateInput.classList.remove("d-none");
+                        customDateServis.classList.remove("d-none");
                     } else {
-                        customDateInput.classList.add("d-none");
+                        customDateServis.classList.add("d-none");
                         updateChart(selectedFilter);
                     }
                 });
 
-                document.getElementById("customDateServis").addEventListener("change", function() {
+                customDateServis.addEventListener("change", function() {
                     if (this.value) {
-                        const labels = [this.value];
-                        const data = [Math.floor(Math.random() * 10000000) + 5000000];
-                        generateChart(labels, data);
+                        fetch(`/api/get-servisbarang-by-date?date=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("Custom Date Data:", data); // Debugging
+                                if (chartTransaksi) chartTransaksi.destroy();
+                                generateChart(data.labels, data.data); // Sesuai format Chart.js
+                            })
+                            .catch(error => console.error("Error fetching custom date data:", error));
                     }
                 });
 
-                let resizeTimer;
                 window.addEventListener("resize", function() {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(() => {
-                        if (chartServis) {
-                            generateChart(chartServis.data.labels, chartServis.data.datasets[0].data);
-                        }
-                    }, 300);
+                    if (chartTransaksi) {
+                        generateChart(
+                            chartTransaksi.data.labels,
+                            chartTransaksi.data.datasets[0].data
+                        );
+                    }
                 });
 
                 updateChart("year");
@@ -425,36 +450,32 @@
         <!-- js grafik layanan servis jasa -->
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                const canvasJasa = document.getElementById("chartJasa");
-                if (!canvasJasa) {
-                    console.error("Canvas tidak ditemukan!");
-                    return;
-                }
-
-                const ctxJasa = canvasJasa.getContext("2d");
-                let chartJasa;
+                const ctx = document.getElementById("chartJasa").getContext("2d");
+                let chartTransaksi;
+                const filterJasa = document.getElementById("filterJasa"); // Ganti nama variabel
+                const customDateJasa = document.getElementById("customDateJasa");
 
                 function responsiveFontSize() {
                     if (window.innerWidth <= 480) return 6;
+                    if (window.innerWidth <= 500) return 7;
                     if (window.innerWidth <= 768) return 10;
                     return 12;
                 }
 
-                function generateChartJasa(labels, data) {
-                    if (chartJasa) {
-                        chartJasa.destroy();
+                function generateChart(labels, data) {
+                    if (chartTransaksi) {
+                        chartTransaksi.destroy();
                     }
 
-                    chartJasa = new Chart(ctxJasa, {
+                    chartTransaksi = new Chart(ctx, {
                         type: "bar",
                         data: {
                             labels: labels,
                             datasets: [{
                                 label: "Pendapatan (Rp)",
                                 data: data,
-                                backgroundColor: "#7cb0ff",
+                                backgroundColor: "#74a0ff",
                                 borderRadius: 5,
-                                borderSkipped: false
                             }]
                         },
                         options: {
@@ -462,17 +483,17 @@
                             maintainAspectRatio: false,
                             layout: {
                                 padding: {
-                                    left: 5,
-                                    right: 5,
-                                    top: 10,
-                                    bottom: 5
+                                    left: 10,
+                                    right: 10,
+                                    top: 20,
+                                    bottom: 10
                                 }
                             },
                             scales: {
                                 x: {
                                     ticks: {
                                         autoSkip: true,
-                                        maxRotation: 30,
+                                        maxRotation: 45,
                                         font: {
                                             size: responsiveFontSize()
                                         }
@@ -480,9 +501,9 @@
                                 },
                                 y: {
                                     beginAtZero: true,
-                                    max: 20000000,
+                                    suggestedMax: 1000000,
                                     ticks: {
-                                        stepSize: 5000000,
+                                        stepSize: 100000,
                                         font: {
                                             size: responsiveFontSize()
                                         },
@@ -513,58 +534,54 @@
                     });
                 }
 
-                function updateChartJasa(filter) {
-                    let labels, data;
-
-                    if (filter === "week") {
-                        labels = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
-                        data = [6000000, 5200000, 5500000, 5800000, 6000000, 6200000, 6300000];
-                    } else if (filter === "month" || filter === "last_month") {
-                        labels = Array.from({
-                            length: 31
-                        }, (_, i) => `tgl ${i + 1}`);
-                        data = Array.from({
-                            length: 31
-                        }, () => Math.floor(Math.random() * 8000000) + 6000000);
-                    } else if (filter === "year") {
-                        labels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
-                        data = [14000000, 12500000, 14500000, 15000000, 13500000, 16000000, 16500000, 17000000, 15500000, 14500000, 15000000, 18000000];
-                    }
-
-                    generateChartJasa(labels, data);
+                function updateChart(filter) {
+                    fetch(`/api/get-servislayanan-grafik?filter=${filter}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Data API:", data);
+                            if (data.labels && data.data) {
+                                generateChart(data.labels, data.data);
+                            } else {
+                                console.error("Data dari API tidak valid");
+                            }
+                        })
+                        .catch(error => console.error("Error fetch data:", error));
                 }
 
-                document.getElementById("filterGrafikJasa").addEventListener("change", function() {
+                filterJasa.addEventListener("change", function() { // Ubah event listener ke filterJasa
                     const selectedFilter = this.value;
-                    const customDateInput = document.getElementById("customDateJasa");
 
                     if (selectedFilter === "custom") {
-                        customDateInput.classList.remove("d-none");
+                        customDateJasa.classList.remove("d-none");
                     } else {
-                        customDateInput.classList.add("d-none");
-                        updateChartJasa(selectedFilter);
+                        customDateJasa.classList.add("d-none");
+                        updateChart(selectedFilter);
                     }
                 });
 
-                document.getElementById("customDateJasa").addEventListener("change", function() {
+                customDateJasa.addEventListener("change", function() {
                     if (this.value) {
-                        const labels = [this.value];
-                        const data = [Math.floor(Math.random() * 12000000) + 7000000];
-                        generateChartJasa(labels, data);
+                        fetch(`/api/get-servislayanan-by-date?date=${this.value}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log("Custom Date Data:", data); // Debugging
+                                if (chartTransaksi) chartTransaksi.destroy();
+                                generateChart(data.labels, data.data); // Sesuai format Chart.js
+                            })
+                            .catch(error => console.error("Error fetching custom date data:", error));
                     }
                 });
 
-                let resizeTimer;
                 window.addEventListener("resize", function() {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(() => {
-                        if (chartJasa) {
-                            generateChartJasa(chartJasa.data.labels, chartJasa.data.datasets[0].data);
-                        }
-                    }, 300);
+                    if (chartTransaksi) {
+                        generateChart(
+                            chartTransaksi.data.labels,
+                            chartTransaksi.data.datasets[0].data
+                        );
+                    }
                 });
 
-                updateChartJasa("year");
+                updateChart("year");
             });
         </script>
 

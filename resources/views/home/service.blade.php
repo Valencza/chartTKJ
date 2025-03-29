@@ -321,7 +321,11 @@
         background: color-mix(in srgb, var(--accent-color), transparent 15%);
     }
 
-
+    .card img.img-fluid {
+        height: 200px;
+        object-fit: cover;
+        border-radius: 15px;
+    }
 
     @media screen and (max-width: 990px) {
         .cta .container {
@@ -623,20 +627,22 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-12 mb-lg-4 mb-md-4 mb-5 mt-3" data-aos-delay="200">
                     <div class="d-flex align-items-center justify-content-lg-end justify-content-md-end justify-content-center">
-                        <a href="{{route ('portfolio') }}" class="btn btn-primary rounded-pill d-flex align-items-center gap-2 py-3 px-4" style="font-weight: 500;">
+                        <a href="{{ route('portofolio.index') }}" class="btn btn-primary rounded-pill d-flex align-items-center gap-2 py-3 px-4" style="font-weight: 500;">
                             Lihat Lebih Banyak <i class="bi bi-arrow-right-circle fs-5"></i>
                         </a>
                     </div>
                 </div>
+
+                @foreach ($portfolios as $portfolio)
                 <div class="col-lg-4 col-md-6 col-12 mb-4" data-aos-delay="50">
                     <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                        <img src="{{asset ('assets/user/img/digireads-assets/portrait-female-working.jpg') }}" class="card-img-top img-fluid" alt="Servis Laptop & PC">
-                        <div class="card-body">
-                            <h1 class="card-title fs-5 fw-bold">Proyek Servis Laptop & PC</h1>
-                            <p class="text-muted">Beberapa proyek perbaikan, upgrade, dan optimasi laptop atau PC yang telah kami selesaikan dengan hasil memuaskan.</p>
+                        <img src="{{ asset('storage/' . $portfolio->gambar) }}" class="img-fluid" alt="{{ $portfolio->nama }}">
+                        <div class="card-body" style="height: auto;">
+                            <h1 class="card-title fs-5 fw-bold">{{ $portfolio->nama }}</h1>
+                            <p class="text-muted">{{ Str::limit($portfolio->deskripsi, 100) }}</p>
                             <div class="read-more d-flex justify-content-end">
                                 <div class="d-flex detail-pc align-items-center">
-                                    <a href="{{route ('detail-portofolio') }}" class="btn btn-primary d-flex align-items-center gap-2">
+                                    <a href="{{ route('portofolio.detail', $portfolio->slug) }}" class="btn btn-primary d-flex align-items-center gap-2">
                                         Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
                                     </a>
                                 </div>
@@ -644,41 +650,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-12 mb-4" data-aos-delay="250">
-                    <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                        <img src="{{asset ('assets/user/img/digireads-assets/top-view-wi-fi-router-with-laptop-hand-holding-smartphone.jpg') }}" class="card-img-top img-fluid" alt="Instalasi Jaringan">
-                        <div class="card-body">
-                            <h1 class="card-title fs-5 fw-bold">Portofolio Instalasi Jaringan</h1>
-                            <p class="text-muted">Dokumentasi pemasangan, konfigurasi, dan perawatan jaringan untuk berbagai klien bisnis dan pribadi.</p>
-                            <div class="read-more d-flex justify-content-end">
-                                <div class="d-flex detail-pc align-items-center">
-                                    <a href="#" class="btn btn-primary d-flex align-items-center gap-2">
-                                        Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12 mb-4" data-aos-delay="450">
-                    <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                        <img src="{{asset ('assets/user/img/digireads-assets/electronic-technician-holds-two-identical-smartphones-comparison-one-hand-broken-another-new.jpg') }}" class="card-img-top img-fluid" alt="Instalasi CCTV">
-                        <div class="card-body">
-                            <h1 class="card-title fs-5 fw-bold">Proyek Servis dan Perbaikan HP</h1>
-                            <p class="text-muted">Berbagai proyek perbaikan HP mulai dari ganti layar, baterai, hingga perbaikan software dan hardware.</p>
-                            <div class="read-more d-flex justify-content-end">
-                                <div class="d-flex detail-pc align-items-center">
-                                    <a href="#" class="btn btn-primary d-flex align-items-center gap-2">
-                                        Lihat Detail <i class="bi bi-arrow-right-circle fs-5 ms-1"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
+
     <!-- Portfolio Section -->
 
     <!-- Testimoni start -->
@@ -870,6 +846,10 @@
                             </select>
                         </div>
                         <div class="mb-3">
+                            <label for="merk" class="form-label" style="font-weight: 600;">Merk :</label>
+                            <input type="text" class="form-control" id="merk" name="merk" required>
+                        </div>
+                        <div class="mb-3">
                             <label for="jenis_kerusakan" class="form-label" style="font-weight: 600;">Pilih Jenis Kerusakan :</label>
                             <select class="form-control" id="jenis_kerusakan" name="jenis_kerusakan_id" required>
                                 <option value="" disabled selected>Pilih Jenis Kerusakan</option>
@@ -886,19 +866,33 @@
                             <textarea class="form-control" id="kerusakan" name="kerusakan" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label for="tanggal" class="form-label" style="font-weight: 600;">Tanggal Servis :</label>
-                            <input type="date" class="form-control" id="tanggal" name="tanggal" required>
-                        </div>
-                        <div class="mb-3">
                             <label for="harga" class="form-label" style="font-weight: 600;">Harga Servis :</label>
                             <input type="text" class="form-control" id="harga" name="harga" readonly>
                         </div>
+
+                        <!-- Tambahan untuk Backup -->
+                        <div class="mb-3">
+                            <label for="backUp" class="form-label" style="font-weight: 600;">Backup Data?</label>
+                            <select class="form-control" id="backUp" name="backUp">
+                                <option value="" disabled selected>Pilih Opsi</option>
+                                <option value="iya">Iya</option>
+                                <option value="tidak">Tidak</option>
+                            </select>
+                        </div>
+
+                        <!-- Tambahan untuk Password -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label" style="font-weight: 600;">Password :</label>
+                            <input type="text" class="form-control" id="password" name="password">
+                        </div>
+
                         <input type="hidden" id="status" name="status" value="pending">
                         <input type="hidden" id="proses" name="proses" value="Menunggu">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="button" class="btn btn-primary" id="btnKirim">Kirim</button>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn btn-primary" id="btnKirim">Kirim</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -952,10 +946,10 @@
                             <label for="tanggal" class="form-label" style="font-weight: 600;">Tanggal Pelaksanaan :</label>
                             <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Kirim</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-primary">Kirim</button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -1148,7 +1142,7 @@
                     window.snap.pay(data.token, {
                         onSuccess: function(result) {
                             alert("Pembayaran berhasil!");
-                            window.location.href = "{{ route('service') }}";
+                            window.location.href = "{{ route('serviceLayanan.invoice', '') }}/" + result.order_id;
                         },
                         onPending: function(result) {
                             alert("Pembayaran pending.");

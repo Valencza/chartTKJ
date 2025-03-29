@@ -19,15 +19,16 @@ class ServisBarang extends Model
         'telepon',
         'barang_id',
         'jenis_kerusakan_id',
+        'merk',
         'kerusakan',
-        'tanggal',
+        'backUp',
         'harga',
+        'password',
         'status',
         'proses',
     ];
 
     protected $casts = [
-        'tanggal' => 'date',
         'harga' => 'decimal:2',
     ];
 
@@ -38,6 +39,12 @@ class ServisBarang extends Model
     {
         return $this->belongsTo(user::class, 'user_id');
     }
+
+    public function petugas()
+    {
+        return $this->hasOneThrough(User::class, ServisBarangPetugas::class, 'servis_barang_id', 'id', 'id', 'petugas_id');
+    }
+
 
     public function servisBarangPetugas()
     {
@@ -52,5 +59,10 @@ class ServisBarang extends Model
     public function jenisKerusakan()
     {
         return $this->belongsTo(jenisKerusakan::class, 'jenis_kerusakan_id', 'id');
+    }
+
+    public function informasiTanggal()
+    {
+        return $this->hasOne(InformasiTanggal::class, 'servis_barang_id');
     }
 }

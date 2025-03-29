@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InformasiTanggal;
 use App\Models\ServisBarang;
 use App\Models\ServisBarangPetugas;
 use App\Models\User;
@@ -35,15 +36,29 @@ class adminServiceBarangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $servisBarang = ServisBarang::findOrFail($id);
-            $servisBarang->status = $request->status;
-            $servisBarang->save();
+        $servisBarang = ServisBarang::findOrFail($id);
+        $servisBarang->status = $request->status;
+        $servisBarang->save(); // Simpan perubahan status
 
-            return response()->json(['success' => true, 'message' => 'Status berhasil diperbarui.']);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan.'], 500);
+        // Jika status berubah menjadi "Paid", buat entri baru di informasi_tanggal
+        if ($request->status === 'paid') {
+            // Periksa apakah entri sudah ada untuk servis_barang_id
+            $informasiTanggal = InformasiTanggal::where('servis_barang_id', $servisBarang->id)->first();
+
+            if (!$informasiTanggal) {
+                InformasiTanggal::create([
+                    'servis_barang_id' => $servisBarang->id,
+                    'tanggal_diterima' => null,
+                    'tanggal_diserahkan' => null, // Biarkan null terlebih dahulu
+                ]);
+            } else {
+                // Jika sudah ada, pastikan tanggal_diserahkan tetap null
+                $informasiTanggal->update(['tanggal_diterima' => null]);
+                $informasiTanggal->update(['tanggal_diserahkan' => null]);
+            }
         }
+
+        return response()->json(['success' => true, 'message' => 'Status berhasil diperbarui.']);
     }
 
     public function petugas(Request $request)

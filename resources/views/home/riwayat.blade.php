@@ -78,13 +78,21 @@
                                     </h5>
                                     <ul class="list-unstyled">
                                         <li class="mb-1"><span style="font-weight: 600;">No. Order :</span> {{ $layanan->order_id }}</li>
-                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> Hanan Wian</li>
+                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> {{ $layanan->petugas?->nama ?? 'Belum ditugaskan' }}</li>
                                         <li class="mb-1"><span style="font-weight: 600;">Layanan :</span> {{ $layanan->jenisJasa?->nama ?? 'Tidak tersedia' }}</li>
                                         <li>
                                             <span style="font-weight: 500;">Proses :</span>
                                             <span class="badge p-2" style="background-color: #fff3cd; color: #c99700;">{{ $layanan->proses }}</span>
                                         </li>
                                     </ul>
+
+                                    <!-- Tombol  -->
+                                    <div class="text-end mt-4">
+                                        <a href="{{ route('invoice.jasa', $layanan->order_id) }}" class="btn btn-primary">
+                                            <i class="bi bi-cart-plus me-2"></i>Invoice
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -103,7 +111,7 @@
                                     </h5>
                                     <ul class="list-unstyled">
                                         <li class="mb-1"><span style="font-weight: 600;">No. Order :</span> {{ $barang->order_id }}</li>
-                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> Valencza </li>
+                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> {{ $barang->petugas?->nama ?? 'Belum ditugaskan' }} </li>
                                         <li class="mb-1"><span style="font-weight: 600;">Barang :</span> {{ $barang->jenisBarang?->nama ?? 'Tidak tersedia' }}</li>
                                         <li class="mb-1"><span style="font-weight: 600;">Kerusakan :</span> {{ $barang->jenisKerusakan?->nama ?? 'Tidak tersedia' }}</li>
                                         <li>
@@ -111,6 +119,14 @@
                                             <span class="badge p-2" style="background-color: #fff3cd; color: #c99700;">{{ $barang->proses }}</span>
                                         </li>
                                     </ul>
+
+                                    <!-- Tombol  -->
+                                    <div class="text-end mt-4">
+                                        <a href="{{ route('invoice.servis', $barang->order_id) }}" class="btn btn-primary">
+                                            <i class="bi bi-cart-plus me-2"></i>Invoice
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -138,9 +154,9 @@
                                         </div>
                                     </div>
                                     <div class="text-end mt-4">
-                                        <button class="btn btn-primary">
-                                            <i class="bi bi-cart-plus me-2"></i>Beli Lagi
-                                        </button>
+                                        <a href="{{ route('invoice.barang', ['order_id' => $order->id]) }}" class="btn btn-primary">
+                                            <i class="bi bi-cart-plus me-2"></i> Invoice
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -182,13 +198,21 @@
                                     <!-- Informasi Riwayat -->
                                     <ul class="list-unstyled">
                                         <li class="mb-1"><span style="font-weight: 600;">No. Order :</span> {{ $layanan->order_id }}</li>
-                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> Hanan Wian</li>
+                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> {{ $layanan->petugas?->nama ?? 'Belum ditugaskan' }}</li>
                                         <li class="mb-1"><span style="font-weight: 600;">Layanan :</span> {{ $layanan->jenisJasa?->nama ?? 'Tidak tersedia' }}</li>
                                         <li>
                                             <span style="font-weight: 500;">Proses :</span>
                                             <span class="badge p-2" style="background-color: #fff3cd; color: #c99700;">{{ $layanan->proses }}</span>
                                         </li>
                                     </ul>
+
+                                    <!-- Tombol  -->
+                                    <div class="text-end mt-4">
+                                        <a href="{{ route('invoice.jasa', $layanan->order_id) }}" class="btn btn-primary">
+                                            <i class="bi bi-cart-plus me-2"></i>Invoice
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -227,7 +251,7 @@
                                     <!-- Informasi Riwayat -->
                                     <ul class="list-unstyled">
                                         <li class="mb-1"><span style="font-weight: 600;">No. Order :</span> {{ $barang->order_id }}</li>
-                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> Valencza </li>
+                                        <li class="mb-1"><span style="font-weight: 600;">Petugas :</span> {{ $barang->petugas?->nama ?? 'Belum ditugaskan' }}</li>
                                         <li class="mb-1"><span style="font-weight: 600;">Barang :</span> {{ $barang->jenisBarang?->nama ?? 'Tidak tersedia' }}</li>
                                         <li class="mb-1"><span style="font-weight: 600;">Kerusakan :</span> {{ $barang->jenisKerusakan?->nama ?? 'Tidak tersedia' }}</li>
                                         <li>
@@ -235,6 +259,14 @@
                                             <span class="badge p-2" style="background-color: #fff3cd; color: #c99700;">{{ $barang->proses }}</span>
                                         </li>
                                     </ul>
+
+                                    <!-- Tombol  -->
+                                    <div class="text-end mt-4">
+                                        <a href="{{ route('invoice.servis', $barang->order_id) }}" class="btn btn-primary">
+                                            <i class="bi bi-cart-plus me-2"></i>Invoice
+                                        </a>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -282,10 +314,10 @@
                                         </div>
                                     </div>
 
-                                    <!-- Tombol Beli Lagi -->
+                                    <!-- Tombol  -->
                                     <div class="text-end mt-4">
                                         <button class="btn btn-primary">
-                                            <i class="bi bi-cart-plus me-2"></i>Beli Lagi
+                                            <i class="bi bi-cart-plus me-2"></i>Invoice
                                         </button>
                                     </div>
                                 </div>

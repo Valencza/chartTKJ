@@ -17,6 +17,7 @@
           <span class="menu-title">Produk Kami</span>
         </a>
       </div>
+
       <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
         <span class="menu-link">
           <span class="menu-bullet">
@@ -44,14 +45,52 @@
           </div>
         </div>
       </div>
-      <!-- <div class="menu-item">
+
+      <div class="menu-item">
         <a class="menu-link {{ request()->routeIs('portofolio') ? 'active' : '' }}" href="{{ route('portofolio') }}">
           <span class="menu-bullet">
             <i class="fa fa-briefcase"></i>
           </span>
-          <span class="menu-title">Portofolio Kami</span>
+          <span class="menu-title">Portofolio</span>
         </a>
-      </div> -->
+      </div>
+
+      <div class="menu-item">
+        <a class="menu-link {{ request()->routeIs('informasi-tanggal.index') ? 'active' : '' }}" href="{{ route('informasi-tanggal.index') }}">
+          <span class="menu-bullet">
+            <i class="fa fa-briefcase"></i>
+          </span>
+          <span class="menu-title">Tanggal Servis</span>
+        </a>
+      </div>
+
+      <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
+        <span class="menu-link">
+          <span class="menu-bullet">
+            <i class="bi bi-grid-fill"></i>
+          </span>
+          <span class="menu-title">Petugas</span>
+          <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion ">
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('servisBarangPetugas') ? 'active' : '' }}" href="{{route ('servisBarangPetugas') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Servis</span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('servisLayananPetugas') ? 'active' : '' }}" href="{{route ('servisLayananPetugas') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Layanan<span>
+            </a>
+          </div>
+        </div>
+      </div>
 
       <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
         <span class="menu-link">
@@ -117,14 +156,44 @@
         </div>
       </div>
 
-      <!-- <div class="menu-item">
-        <a class="menu-link" href="#">
+      <div class="menu-item">
+        <a class="menu-link {{ request()->routeIs('user') ? 'active' : '' }}" href="{{ route('user') }}">
           <span class="menu-bullet">
-            <i class="fa fa-tools"></i>
+            <i class="fa fa-user"></i>
           </span>
-          <span class="menu-title">Service</span>
+          <span class="menu-title">User</span>
         </a>
-      </div> -->
+      </div>
+
+      <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
+        <span class="menu-link">
+          <span class="menu-bullet">
+            <i class="bi bi-grid-fill"></i>
+          </span>
+          <span class="menu-title">Ulasan</span>
+          <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion ">
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('ulasan') ? 'active' : '' }}" href="{{route ('ulasan') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Ulasan Produk</span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('ulasanUser') ? 'active' : '' }}" href="{{route ('ulasanUser') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Ulasan Pengguna<span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+
     </div>
   </div>
 </div>
