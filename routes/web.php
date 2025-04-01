@@ -1,12 +1,17 @@
 <?php
 
 use App\Http\Controllers\AdminEditRoleController;
+use App\Http\Controllers\AdminInformasiTanggalJasaController;
+use App\Http\Controllers\AdminNotifikasiProdukController;
+use App\Http\Controllers\AdminNotifikasiServisBarangController;
+use App\Http\Controllers\AdminNotifikasiServisJasaController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminPortofolioController;
 use App\Http\Controllers\adminServiceBarangController;
 use App\Http\Controllers\AdminServisBarangPetugasController;
 use App\Http\Controllers\AdminservisLayananController;
 use App\Http\Controllers\AdminServisLayananPetugasController;
+use App\Http\Controllers\AdminStokController;
 use App\Http\Controllers\AdminUlasanController;
 use App\Http\Controllers\AdminUlasanProdukController;
 use App\Http\Controllers\AdminUlasanUserController;
@@ -26,6 +31,7 @@ use App\Http\Controllers\kategoriBarangController;
 use App\Http\Controllers\kategoriJasaController;
 use App\Http\Controllers\KategoriProdukController;
 use App\Http\Controllers\layananController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\PortofolioController;
 use App\Http\Controllers\ProdukController;
@@ -67,6 +73,12 @@ Route::get('/', function () {
 })->name('index');
 
 Route::post('/ulasan-user', [UlasanUserController::class, 'store'])->name('storeUlasanUser');
+
+Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+Route::post('/notifikasi/{id}/read', [NotifikasiController::class, 'markAsRead']);
+Route::post('/notifikasi/read-all', [NotifikasiController::class, 'markAllAsRead']);
+Route::put('/notifikasi/disetujui/{id}', [NotifikasiController::class, 'approve']);
+Route::put('/notifikasi/change-date/{id}', [NotifikasiController::class, 'changeDate'])->name('notifikasi.change-date');
 
 //home.pembelian
 
@@ -230,6 +242,12 @@ Route::post('/dashboard/produk/store', [ProdukController::class, 'store'])->name
 Route::put('/dashboard/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
 Route::delete('/dashboard/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
 
+//dashboard.produk-stok
+
+Route::get('/dashboard/stok-produk', [AdminStokController::class, 'index'])->name('stok');
+Route::put('/dashboard/stok-produk/{id}', [AdminStokController::class, 'update'])->name('stok.update');
+
+
 Route::get('/get-product/{id}', [ProdukController::class, 'getProduct']);
 
 //dashboard.kategori-produk
@@ -293,6 +311,7 @@ Route::put('/order-servis-layanan-petugas/{id}', [AdminServisLayananPetugasContr
 Route::get('/dashboard/servis-layanan', [AdminservisLayananController::class, 'index'])->name('orderServisLayanan');
 Route::put('/dashboard/servis-layanan/{id}', [AdminservisLayananController::class, 'update'])->name('orderServisLayanan.update');
 Route::post('/dashboard/servis-layanan', [AdminservisLayananController::class, 'petugas'])->name('orderServisLayanan.petugas');
+Route::put('/dashboard/servis-layanan/update-tanggal/{id}', [AdminservisLayananController::class, 'updateTanggal'])->name('servis-jasa.update-tanggal');
 
 //dashboard.informasi-tanggal
 
@@ -301,6 +320,13 @@ Route::prefix('dashboard/informasi-tanggal')->controller(InformasiTanggalControl
     Route::put('/terima/{id}', 'updateDiterima')->name('informasi-tanggal.terima'); // Sesuai method di controller
     Route::put('/serahkan/{id}', 'updateDiserahkan')->name('informasi-tanggal.serahkan'); // Sesuai method di controller
 });
+
+//dashboard.informasi-tanggal-jasa
+
+Route::prefix('dashboard/informasi-tanggal-jasa')->controller(AdminInformasiTanggalJasaController::class)->group(function () {
+    Route::get('/', 'index')->name('informasi-tanggal-jasa.index'); // Ganti dari 'informasiTanggal' ke 'index'
+});
+
 
 
 //dashboard.portofolio
@@ -331,6 +357,19 @@ Route::get('/dashboard/portofolio', [AdminPortofolioController::class, 'index'])
 Route::post('/dashboard/portofolio/store', [AdminPortofolioController::class, 'store'])->name('portofolio.store');
 Route::put('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'update'])->name('portofolio.update');
 Route::delete('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'destroy'])->name('portofolio.destroy');
+
+//dashboard.notifikasi-produk
+
+Route::get('/dashboard/notifikasi/produk', [AdminNotifikasiProdukController::class, 'index'])->name('notifikasi.produk');
+
+//dashboard.notifikasi-servis-barang
+
+Route::get('/dashboard/notifikasi/servis-barang', [AdminNotifikasiServisBarangController::class, 'index'])->name('notifikasi.servisBarang');
+
+//dashboard.notifikasi-servis-jasa
+
+Route::get('/dashboard/notifikasi/servis-layanan', [AdminNotifikasiServisJasaController::class, 'index'])->name('notifikasi.servisJasa');
+Route::put('/dashboard/notifikasi/servis-layanan/update-tanggal/{id}', [AdminNotifikasiServisJasaController::class, 'updateTanggal'])->name('notifikasi.servis-jasa.update-tanggal');
 
 //laravelPWA
 

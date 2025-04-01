@@ -55,4 +55,10 @@ class Order extends Model
             return $item->harga * $item->jumlah;
         });
     }
+
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class);
+    }
+
 }

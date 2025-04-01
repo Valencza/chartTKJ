@@ -48,7 +48,8 @@
                                         data-bs-toggle="modal"
                                         data-bs-target="#editStatusModal"
                                         data-id="{{ $servis->id }}"
-                                        data-proses="{{ $servis->proses }}">
+                                        data-proses="{{ $servis->proses }}"
+                                        {{ $servis->proses === 'selesai' ? 'disabled' : '' }}>
                                         <i class="ki-duotone ki-pencil fs-2"></i>
                                     </button>
                                 </td>

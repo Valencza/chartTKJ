@@ -119,7 +119,7 @@
 
             <!-- Jumlah dan Tombol Beli -->
             <div class="d-flex justify-content-between align-items-center mt-3">
-              <form action="{{ route('checkout', ['slug' => $produk->slug]) }}" method="GET">
+              <form action="{{ route('checkout', ['slug' => $produk->slug]) }}" method="GET" id="checkoutForm">
                 <div class="d-flex align-items-center">
                   <button type="button" class="btn btn-primary fw-bold" id="decrease">-</button>
                   <input type="number" class="form-control mx-2" name="jumlah" id="jumlah_produk" style="width: 50px;" value="1" min="1" max="{{ $produk->stok_in }}">
@@ -127,7 +127,7 @@
                 </div>
             </div>
             <div class="mt-4 pt-3 button-card d-flex">
-              <button class="btn btn-primary rounded-pill mb-lg-0 mb-md-0 mb-3">Beli Sekarang</button>
+              <button type="submit" class="btn btn-primary rounded-pill mb-lg-0 mb-md-0 mb-3" id="beliButton">Beli Sekarang</button>
               </form>
               <button class="btn btn-outline-primary rounded-pill ms-2 d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#spesifikasiModal">
                 <i class="bi bi-info-circle me-2"></i>
@@ -387,6 +387,27 @@
   </div>
 </div>
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+  document.getElementById('beliButton').addEventListener('click', function(event) {
+    const stokIn = {
+      {
+        $produk - > stok_in
+      }
+    };
+    const jumlahInput = document.getElementById('jumlah_produk');
+    const jumlah = parseInt(jumlahInput.value);
+
+    if (stokIn === 0) {
+      event.preventDefault(); // Prevent form submission
+      alert("Produk stok habis!");
+    } else if (jumlah > stokIn) {
+      event.preventDefault(); // Prevent form submission
+      alert("Jumlah pembelian melebihi stok yang tersedia!");
+    }
+  });
+</script>
 
 <script>
   const stars = document.querySelectorAll('.star');

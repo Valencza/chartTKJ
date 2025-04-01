@@ -44,4 +44,17 @@ class ServisJasa extends Model
     {
         return $this->belongsTo(JenisLayanan::class, 'jenis_jasa_id');
     }
+
+    // App\Models\ServisJasa.php
+
+    public function jenisLayanan()
+    {
+        return $this->belongsTo(JenisLayanan::class, 'jenis_layanan_id');
+    }
+
+
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class, 'servis_jasa_id');
+    }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notifikasi;
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminOrderController extends Controller
@@ -19,7 +21,7 @@ class AdminOrderController extends Controller
     {
         // Validasi input status
         $request->validate([
-            'status' => 'required|in:pending,paid,canceled',
+            'status' => 'required|in:paid,pending,canceled',
         ]);
 
         // Cari order berdasarkan ID
@@ -32,29 +34,47 @@ class AdminOrderController extends Controller
         $order->status = $request->input('status');
         $order->save();
 
-        // Jika status order berubah menjadi 'paid', perbarui stok produk
+        // Jika status order berubah menjadi 'paid', perbarui stok produk & buat notifikasi
         if ($order->status == 'paid' && $oldStatus != 'paid') {
-            // Loop untuk setiap item dalam order
             foreach ($order->items as $item) {
-                // Ambil produk terkait
-                $produk = $item->produk;
+                $produk = $item->produk; // Ambil data produk dari order_item
 
                 // Pastikan produk ada
                 if ($produk) {
                     // Kurangi stok_in dan tambahkan stok_out berdasarkan jumlah produk yang dibeli
                     $produk->stok_in -= $item->jumlah;
                     $produk->stok_out += $item->jumlah;
-
-                    // Simpan perubahan stok produk
                     $produk->save();
+
+                    // **Notifikasi untuk User**
+                    Notifikasi::create([
+                        'user_id'  => $order->user_id, // Mengambil user yang melakukan order
+                        'order_id' => $order->id, // Menggunakan ID dari Order
+                        'pesan'    => "Anda telah membayar pesanan produk {$produk->nama} sebanyak {$item->jumlah} item dengan total Rp " . number_format($item->jumlah * $produk->harga, 0, ',', '.'),
+                        'status'   => null, // Pastikan ini sesuai dengan database (nullable atau default)
+                        'type'     => 'orders', // Pastikan ini sesuai dengan database
+                    ]);
+
+                    // **Notifikasi untuk Admin**
+                    // Cek role user untuk menentukan siapa yang akan menerima notifikasi
+                    $admin = User::where('role', 'admin')->first(); // Ambil user dengan role admin
+
+                    if ($admin) {
+                        Notifikasi::create([
+                            'user_id'  => $admin->id, // ID admin yang menerima notifikasi
+                            'order_id' => $order->id, // Menggunakan ID dari Order
+                            'pesan'    => "Pesanan dengan ID {$order->id} telah dibayar oleh {$order->user->nama}. Produk yang dibeli: {$produk->nama} sebanyak {$item->jumlah} item dengan total Rp " . number_format($item->jumlah * $produk->harga, 0, ',', '.'),
+                            'status'   => null, // Pastikan ini sesuai dengan database (nullable atau default)
+                            'type'     => 'orders', // Pastikan ini sesuai dengan database
+                        ]);
+                    }
                 }
             }
         }
 
-        // Mengembalikan response JSON, bisa berupa pesan sukses atau kesalahan
         return response()->json([
             'success' => true,
-            'message' => 'Status order berhasil diperbarui.',
+            'message' => 'Status order berhasil diperbarui dan notifikasi telah dikirim.',
         ]);
     }
 }

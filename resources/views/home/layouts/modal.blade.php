@@ -111,7 +111,7 @@
 
 <!-- Modal Notifikasi -->
 <div class="modal fade" id="notifikasiModal" tabindex="-1" aria-labelledby="notifikasiModalLabel" aria-hidden="true">
-    <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="d-flex align-items-center">
@@ -123,78 +123,37 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="list-group">
-                    <div class="list-group-item py-3 read">
-                        <small class="text-primary timestamp"></small>
-                        <h6 class="my-2"><strong>Reminder : Tagihan jatuh tempo</strong></h6>
-                        <p class="mb-0 text-muted">Segera lunasi tagihan Anda sebelum 5 Februari 2025 yyy.</p>
-                    </div>
-                    <div class="list-group-item py-3">
-                        <small class="text-primary timestamp"></small>
-                        <h6 class="my-2"><strong>Fitur baru tersedia!</strong></h6>
-                        <p class="mb-0 text-muted">Coba fitur baru di aplikasi kami sekarang.</p>
-                    </div>
-                    <div class="list-group-item py-3">
-                        <small class="text-primary timestamp"></small>
-                        <h6 class="my-2"><strong>Pembayaran sukses!</strong></h6>
-                        <p class="mb-0 text-muted">Pembayaran Anda telah berhasil diproses.</p>
-                    </div>
-                    <div class="list-group-item py-3">
-                        <small class="text-primary timestamp"></small>
-                        <h6 class="my-2"><strong>Promo Spesial!</strong></h6>
-                        <p class="mb-0 text-muted">Dapatkan diskon 50% untuk pembelian pertama.</p>
-                    </div>
-                    <div class="list-group-item py-3">
-                        <small class="text-primary timestamp"></small>
-                        <h6 class="my-2"><strong>Update Sistem</strong></h6>
-                        <p class="mb-0 text-muted">Sistem akan diperbarui pada 10 Februari 2025.Sistem akan diperbarui pada 10 Februari 2025.</p>
-                    </div>
+                <div class="list-group" id="notifikasiContainer">
+                    <div class="text-center py-3 text-muted">Memuat notifikasi...</div>
                 </div>
-            </div>
-            <div class="modal-footer">
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal Detail -->
-<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+<!-- Modal Ajukan Tanggal Baru -->
+<div class="modal fade" id="ajukanTanggalModal" tabindex="-1" aria-labelledby="ajukanTanggalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="d-flex align-items-center">
-                    <div class="icon-container text-white d-flex align-items-center justify-content-center py-2 rounded-circle me-2" style="background-color: #e3f7ff; padding: 0px 15px;">
-                        <i class="bi bi-bell-fill fs-5 text-primary"></i>
-                    </div>
-                    <h5 class="modal-title mb-0" id="detailModalLabel">Detail Alamat</h5>
+            <form id="submitNewDate">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ajukanTanggalLabel">Ajukan Tanggal Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body" id="detailModalBody">
-                <!-- Detail teks akan ditampilkan di sini -->
-            </div>
+                <div class="modal-body">
+                    <input type="hidden" name="servis_jasa_id" id="servisJasaId">
+                    <label for="tanggal" class="form-label">Pilih Tanggal Baru:</label>
+                    <input type="date" name="tanggal" id="tanggal" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Kirim</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
-<!-- js tanggal -->
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        let timestamps = document.querySelectorAll(".timestamp");
-
-        timestamps.forEach(timestamp => {
-            let now = new Date();
-            let options = {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            timestamp.innerText = now.toLocaleDateString('id-ID', options);
-        });
-    });
-</script>
 
 <!-- sweet alert modal create alamat -->
 
@@ -241,55 +200,228 @@
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    let alamatModal = document.getElementById('alamatModal');
+    document.addEventListener("DOMContentLoaded", function() {
+        let alamatModal = document.getElementById('alamatModal');
 
-    alamatModal.addEventListener('show.bs.modal', function () {
-        let alamatList = document.getElementById('alamatList');
-        alamatList.innerHTML = '<p class="text-muted">Memuat data...</p>';
-        
-        fetch("{{ route('alamat.get') }}")
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    alamatList.innerHTML = "";
-                    data.forEach(function(alamat) {
-                        let fullText = `${alamat.alamat}`;
-                        let words = fullText.split(" ");
-                        let shortText = words.length > 8 ? words.slice(0, 8).join(" ") + "..." : fullText;
+        alamatModal.addEventListener('show.bs.modal', function() {
+            let alamatList = document.getElementById('alamatList');
+            alamatList.innerHTML = '<p class="text-muted">Memuat data...</p>';
 
-                        let listItem = document.createElement("div");
-                        listItem.className = "list-group-item py-3";
-                        listItem.innerHTML = `
+            fetch("{{ route('alamat.get') }}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        alamatList.innerHTML = "";
+                        data.forEach(function(alamat) {
+                            let fullText = `${alamat.alamat}`;
+                            let words = fullText.split(" ");
+                            let shortText = words.length > 8 ? words.slice(0, 8).join(" ") + "..." : fullText;
+
+                            let listItem = document.createElement("div");
+                            listItem.className = "list-group-item py-3";
+                            listItem.innerHTML = `
                             <h6 class="mb-2"><strong>${alamat.nama}</strong> | ${alamat.no_telpon}</h6>
                             <p class="mb-0 text-muted">${shortText} ${words.length > 8 ? '<a href="#" class="lihat-detail text-primary">Lihat Detail</a>' : ''}</p>
                         `;
 
-                        // Jika teks panjang, tambahkan event listener untuk menampilkan detail
-                        if (words.length > 8) {
-                            listItem.querySelector(".lihat-detail").addEventListener("click", function(e) {
-                                e.preventDefault();
-                                document.getElementById("detailModalBody").innerHTML = `
+                            // Jika teks panjang, tambahkan event listener untuk menampilkan detail
+                            if (words.length > 8) {
+                                listItem.querySelector(".lihat-detail").addEventListener("click", function(e) {
+                                    e.preventDefault();
+                                    document.getElementById("detailModalBody").innerHTML = `
                                     <h6 class="mb-2"><strong>${alamat.nama}</strong> | ${alamat.no_telpon}</h6>
                                     <p class="mb-0">${fullText}</p>
                                 `;
-                                let detailModal = new bootstrap.Modal(document.getElementById("detailModal"));
-                                detailModal.show();
-                            });
-                        }
+                                    let detailModal = new bootstrap.Modal(document.getElementById("detailModal"));
+                                    detailModal.show();
+                                });
+                            }
 
-                        alamatList.appendChild(listItem);
+                            alamatList.appendChild(listItem);
+                        });
+                    } else {
+                        alamatList.innerHTML = '<p class="text-muted">Belum ada alamat yang ditambahkan.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    alamatList.innerHTML = '<p class="text-danger">Gagal memuat data.</p>';
+                });
+        });
+    });
+</script>
+
+<!-- script notif -->
+
+<script>
+    function loadNotifikasi() {
+        fetch('/notifikasi')
+            .then(response => response.json())
+            .then(data => {
+                let notifikasiContainer = document.getElementById('notifikasiContainer');
+                notifikasiContainer.innerHTML = '';
+
+                if (data.length > 0) {
+                    data.forEach(notif => {
+                        let notifItem = document.createElement('div');
+                        notifItem.className = `list-group-item py-3 ${notif.status === 'negosiasi' ? 'bg-light' : ''}`;
+
+                        // Ekstrak tanggal dari pesan notifikasi (format yang sudah ditentukan)
+                        let tanggalTerakhir = notif.pesan.match(/\d{2} \w{3} \d{4}/g);
+                        let tanggalTersimpan = tanggalTerakhir ? formatTanggalToInput(tanggalTerakhir[tanggalTerakhir.length - 1]) : '';
+
+                        // Menambahkan konten untuk notifikasi
+                        notifItem.innerHTML = `
+    <small class="text-primary">${new Date(notif.created_at).toLocaleString()}</small>
+    <h6 class="my-2"><strong>Pemberitahuan</strong></h6>
+    <p class="mb-0 text-muted">${notif.pesan}</p>
+    <div class="mt-2">
+        ${notif.type === 'servis_jasa' && notif.status !== 'disetujui' ? `
+            <button class="btn btn-sm btn-outline-success btn-approve" data-id="${notif.id}">Setujui</button>
+            <button class="btn btn-sm btn-outline-warning btn-change-date" data-id="${notif.servis_jasa_id}" data-tanggal="${tanggalTersimpan}">Ajukan Tanggal Baru</button>
+        ` : ''}
+    </div>
+`;
+
+                        notifikasiContainer.appendChild(notifItem);
                     });
                 } else {
-                    alamatList.innerHTML = '<p class="text-muted">Belum ada alamat yang ditambahkan.</p>';
+                    notifikasiContainer.innerHTML = '<div class="text-center py-3 text-muted">Tidak ada notifikasi</div>';
                 }
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                alamatList.innerHTML = '<p class="text-danger">Gagal memuat data.</p>';
             });
+    }
+
+    document.getElementById('notifikasiContainer').addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-approve')) {
+            let servisJasaId = e.target.getAttribute('data-id');
+            console.log('Servis Jasa ID:', servisJasaId); // Debugging
+
+            fetch(`/notifikasi/disetujui/${servisJasaId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        _method: 'PUT', // Pastikan ini sesuai dengan apa yang diharapkan server
+                        id: servisJasaId,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Response Data:', data); // Menampilkan data dari respons
+                    if (data.success) {
+                        // Menampilkan SweetAlert setelah permintaan berhasil
+                        Swal.fire('Berhasil!', data.message, 'success')
+                            .then(() => {
+                                // Melakukan reload halaman setelah SweetAlert muncul
+                                location.reload(); // Ini akan me-refresh halaman setelah alert ditutup
+                            });
+                    } else {
+                        Swal.fire('Gagal!', data.message || 'Terjadi kesalahan saat mengubah status notifikasi.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Gagal!', 'Terjadi kesalahan saat mengubah status notifikasi.', 'error');
+                });
+        }
     });
-});
+
+    document.getElementById('notifikasiContainer').addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-change-date')) {
+            let servisJasaId = e.target.getAttribute('data-id');
+            let tanggalTersimpan = e.target.getAttribute('data-tanggal');
+
+            // Set nilai input dalam modal
+            document.getElementById('servisJasaId').value = servisJasaId;
+            document.getElementById('tanggal').value = tanggalTersimpan;
+
+            // Tampilkan modal menggunakan Bootstrap 5
+            let modal = new bootstrap.Modal(document.getElementById('ajukanTanggalModal'));
+            modal.show();
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNotifikasi();
+
+        document.getElementById('notifikasiModal').addEventListener('show.bs.modal', function() {
+            loadNotifikasi();
+        });
+
+        // Menangani submit form
+        document.getElementById('submitNewDate').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const servisJasaId = document.getElementById('servisJasaId').value;
+            const tanggal = document.getElementById('tanggal').value;
+
+            fetch(`/notifikasi/change-date/${servisJasaId}`, {
+                    method: 'POST', // Gunakan POST agar Laravel menerima FormData
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        _method: 'PUT', // Tambahkan agar dikenali sebagai PUT
+                        servis_jasa_id: servisJasaId, // Pastikan ini dikirim
+                        tanggal: tanggal
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire('Berhasil!', data.message, 'success');
+                        window.location.reload();
+                    } else {
+                        console.log(data.errors); // Debugging
+                        Swal.fire('Gagal!', 'Validasi gagal: ' + JSON.stringify(data.errors), 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire('Gagal!', 'Terjadi kesalahan saat menyimpan perubahan.', 'error');
+                });
+        });
+
+        document.getElementById('markAllRead').addEventListener('click', function() {
+            fetch('/notifikasi/read-all', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .then(() => {
+                    loadNotifikasi();
+                });
+        });
+    });
+
+    function formatTanggalToInput(tanggal) {
+        const bulanMapping = {
+            "Jan": "01",
+            "Feb": "02",
+            "Mar": "03",
+            "Apr": "04",
+            "May": "05",
+            "Jun": "06",
+            "Jul": "07",
+            "Aug": "08",
+            "Sep": "09",
+            "Oct": "10",
+            "Nov": "11",
+            "Dec": "12"
+        };
+
+        let parts = tanggal.split(' ');
+        if (parts.length === 3) {
+            let day = parts[0].padStart(2, '0');
+            let month = bulanMapping[parts[1]];
+            let year = parts[2];
+            return `${year}-${month}-${day}`;
+        }
+        return '';
+    }
 </script>
 
 

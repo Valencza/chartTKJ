@@ -14,7 +14,16 @@
           <span class="menu-bullet">
             <i class="fa fa-shopping-bag"></i>
           </span>
-          <span class="menu-title">Produk Kami</span>
+          <span class="menu-title">Produk</span>
+        </a>
+      </div>
+
+      <div class="menu-item">
+        <a class="menu-link {{ request()->routeIs('stok') ? 'active' : '' }}" href="{{ route('stok') }}">
+          <span class="menu-bullet">
+            <i class="fa fa-shopping-bag"></i>
+          </span>
+          <span class="menu-title">Stok</span>
         </a>
       </div>
 
@@ -62,6 +71,34 @@
           </span>
           <span class="menu-title">Tanggal Servis</span>
         </a>
+      </div>
+
+      <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
+        <span class="menu-link">
+          <span class="menu-bullet">
+            <i class="bi bi-grid-fill"></i>
+          </span>
+          <span class="menu-title">Informasi Tanggal</span>
+          <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion ">
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('informasi-tanggal.index') ? 'active' : '' }}" href="{{route ('informasi-tanggal.index') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Tanggal Servis</span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('informasi-tanggal-jasa.index') ? 'active' : '' }}" href="{{route ('informasi-tanggal-jasa.index') }}">
+              <span class="menu-bullet">
+                <span class="bullet bullet-dot"></span>
+              </span>
+              <span class="menu-title">Tanggal Jasa<span>
+            </a>
+          </div>
+        </div>
       </div>
 
       <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
@@ -188,6 +225,42 @@
                 <span class="bullet bullet-dot"></span>
               </span>
               <span class="menu-title">Ulasan Pengguna<span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div data-kt-menu-trigger="click" class="menu-item menu-accordion ">
+        <span class="menu-link">
+          <span class="menu-bullet">
+            <i class="bi bi-grid-fill"></i>
+          </span>
+          <span class="menu-title">Notifikasi</span>
+          <span class="menu-arrow"></span>
+        </span>
+        <div class="menu-sub menu-sub-accordion ">
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('notifikasi.produk') ? 'active' : '' }}" href="{{ route('notifikasi.produk') }}">
+              <span class="menu-bullet">
+                <span class="fa fa-shopping-bag"></span>
+              </span>
+              <span class="menu-title">Notifikasi Produk</span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('notifikasi.servisBarang') ? 'active' : '' }}" href="{{ route('notifikasi.servisBarang') }}">
+              <span class="menu-bullet">
+                <span class="fa fa-tools"></span>
+              </span>
+              <span class="menu-title">Notifikasi Servis<span>
+            </a>
+          </div>
+          <div class="menu-item">
+            <a class="menu-link {{ request()->routeIs('notifikasi.servisJasa') ? 'active' : '' }}" href="{{ route('notifikasi.servisJasa') }}">
+              <span class="menu-bullet">
+                <span class="fa fa-tools"></span>
+              </span>
+              <span class="menu-title">Notifikasi Jasa<span>
             </a>
           </div>
         </div>

@@ -18,11 +18,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'nama', 
-        'email', 
+        'nama',
+        'email',
         'password',
-        'no_telpon', 
-        'gambar', 
+        'no_telpon',
+        'gambar',
         'role',
     ];
 
@@ -30,7 +30,8 @@ class User extends Authenticatable
         'role' => 'user', // Default role
     ];
 
-    public function alamat(): HasMany {
+    public function alamat(): HasMany
+    {
         return $this->hasMany(Alamat::class, 'id_user');
     }
 
@@ -55,5 +56,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function notifikasiJasa()
+    {
+        return $this->hasMany(Notifikasi::class, 'user_id');
     }
 }

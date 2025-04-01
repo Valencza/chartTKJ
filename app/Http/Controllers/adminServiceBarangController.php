@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InformasiTanggal;
+use App\Models\Notifikasi;
 use App\Models\ServisBarang;
 use App\Models\ServisBarangPetugas;
 use App\Models\User;
@@ -68,6 +69,12 @@ class adminServiceBarangController extends Controller
             'petugas_id' => 'required|exists:users,id',
         ]);
 
+        // Find the ServisBarang and related data
+        $servisBarang = ServisBarang::findOrFail($request->servis_barang_id);
+        $petugas = User::findOrFail($request->petugas_id);
+        $kerusakan = $servisBarang->jenisKerusakan->nama ?? 'Kerusakan Tidak Diketahui';  // Assuming 'jenisKerusakan' relationship exists
+        $barang = $servisBarang->jenisBarang->nama ?? 'Barang Tidak Diketahui';  // Assuming 'jenisBarang' relationship exists
+
         // Hapus petugas lama jika sudah ada
         ServisBarangPetugas::where('servis_barang_id', $request->servis_barang_id)->delete();
 
@@ -77,6 +84,15 @@ class adminServiceBarangController extends Controller
             'petugas_id' => $request->petugas_id,
         ]);
 
-        return redirect()->route('orderServisBarang')->with('success', 'Petugas berhasil diperbarui.');
+        // Kirim notifikasi
+        Notifikasi::create([
+            'user_id' => $servisBarang->user_id, // Assuming 'user_id' refers to the user the item belongs to
+            'servis_barang_id' => $request->servis_barang_id,
+            'pesan' => "Barang $barang anda dengan kerusakan $kerusakan telah ditangani oleh petugas: {$petugas->nama}.",
+            'status' => null,
+            'type' => 'servis_barang',
+        ]);
+
+        return redirect()->route('orderServisBarang')->with('success', 'Petugas berhasil diperbarui dan notifikasi dikirim.');
     }
 }

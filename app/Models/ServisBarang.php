@@ -65,4 +65,9 @@ class ServisBarang extends Model
     {
         return $this->hasOne(InformasiTanggal::class, 'servis_barang_id');
     }
+
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class, 'servis_barang_id');
+    }
 }

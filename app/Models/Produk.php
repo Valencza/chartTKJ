@@ -28,7 +28,8 @@ class Produk extends Model
     /**
      * Kurangi stok_in dan tambahkan stok_out sesuai jumlah yang dibeli.
      */
-    public function updateStock($jumlah) {
+    public function updateStock($jumlah)
+    {
         $this->stok_in -= $jumlah;
         $this->stok_out += $jumlah;
         $this->save();
@@ -61,5 +62,10 @@ class Produk extends Model
     public function ulasan()
     {
         return $this->hasMany(ulasan::class, 'id_produk');
+    }
+
+    public function notifikasi()
+    {
+        return $this->hasMany(Notifikasi::class, 'produk_id');
     }
 }
