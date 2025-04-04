@@ -1,4 +1,4 @@
-name: Deploy Laravel ke Hostinger
+name: Deploy Laravel ke Hostinger Project Sekolah
 
 on:
   push:
