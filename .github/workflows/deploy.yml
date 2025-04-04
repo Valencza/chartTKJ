@@ -1,0 +1,26 @@
+name: Deploy Laravel ke Hostinger
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Install SSH Client
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy ke Hostinger
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -p 65002 "
+          cd /home/${{ secrets.SSH_USERNAME }}/public_html &&
+          git pull origin main &&
+          composer install --no-dev --optimize-autoloader &&
+          php artisan cache:clear &&
+          php artisan config:clear
+          "
