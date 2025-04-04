@@ -1,32 +1,32 @@
-name: Deploy Laravel ke Hostinger Menggunakan Github
+name: Deploy to Hostinger
 
 on:
   push:
     branches:
-      - main  # Akan berjalan otomatis saat push ke branch main
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Kode dari GitHub
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Setup SSH Key
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-keyscan -p 65002 ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Setup SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 400 ~/.ssh/id_ed25519
+          ssh-keyscan -p 65002 ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Deploy ke Hostinger
-      run: |
-        ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -p 65002 << 'EOF'
-        cd /home/${{ secrets.SSH_USERNAME }}/public_html
-        git pull origin main
-        composer install --no-dev --optimize-autoloader
-        php artisan cache:clear
-        php artisan config:clear
-        php artisan storage:link
-        EOF
+      - name: Deploy ke Hostinger
+        run: |
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} -p 65002 << EOF
+          cd /home/${{ secrets.SSH_USERNAME }}/public_html
+          git pull origin main
+          composer install --no-dev --optimize-autoloader
+          php artisan cache:clear
+          php artisan config:clear
+          php artisan storage:link
+          EOF
