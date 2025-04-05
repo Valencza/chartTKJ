@@ -48,9 +48,9 @@
                                 <td class="text-center">{{ $index + 1 }}</td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center">
-                                        <a class="d-block overlay me-3" data-fslightbox="lightbox-basic" href="{{ asset('storage/' . $portofolio->gambar) }}">
+                                        <a class="d-block overlay me-3" data-fslightbox="lightbox-basic" href="{{ asset($portofolio->gambar) }}">
                                             <div class="symbol symbol-50px">
-                                                <img src="{{ asset('storage/' . $portofolio->gambar) }}" alt="Gambar Produk" class="img-fluid" style="max-width: 50px;">
+                                                <img src="{{ asset($portofolio->gambar) }}" alt="Gambar Produk" class="img-fluid" style="max-width: 50px;">
                                             </div>
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white"></i>

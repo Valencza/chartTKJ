@@ -248,7 +248,7 @@
                                                     </div>
                                                 </a>
                                                 @endauth
-                                                <img src="{{ asset('storage/' . $product->gambar) }}" alt="{{ $product->nama }}" />
+                                                <img src="{{ asset($product->gambar) }}" alt="{{ $product->nama }}" />
                                                 <div class="card-body pt-0 px-0 pb-0 my-3 text-start">
                                                     <div class="col px-4">
                                                         <h5 class="card-title">{{ $product->nama }}</h5>
@@ -343,7 +343,7 @@
                                                     </div>
                                                 </a>
                                                 @endauth
-                                                <img src="{{ asset('storage/' . $produk->gambar) }}" alt="{{ $produk->nama }}" />
+                                                <img src="{{ asset($produk->gambar) }}" alt="{{ $produk->nama }}" />
                                                 <div class="card-body pt-0 px-0 pb-0 my-3 text-start">
                                                     <div class="col px-4">
                                                         <h5 class="card-title">{{ $produk->nama }}</h5>
@@ -478,7 +478,7 @@
                         htmlContent += `
                             <a href="/detail-produk/${item.produk.slug}">
                             <div class="cart-item d-flex align-items-center border-bottom pb-3 mb-3" style="cursor: pointer;">
-                                <img src="/storage/${item.produk.gambar}" alt="${item.produk.nama}" class="img-thumbnail me-3">
+                                <img src="${item.produk.gambar}" alt="${item.produk.nama}" class="img-thumbnail me-3">
                                 <div class="flex-grow-1">
                                     <div class="d-flex align-items-center">
                                         <h5 class="mb-1">${item.produk.nama}</h5>

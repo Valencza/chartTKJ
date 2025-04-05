@@ -9,7 +9,7 @@
     <div class="row w-100">
         <div class="col-xxl-6 col-lg-6 d-flex align-items-center justify-content-center">
             <div class="login-form">
-                <img src="{{asset ('assets/user/img/logo.svg') }}" alt="Logo" class=" mt-5 mb-2 img-fluid" style="max-width: 160px;">
+                <img src="{{asset ('assets/user/img/LOGO.svg') }}" alt="Logo" class=" mt-5 mb-2 img-fluid" style="max-width: 160px;">
                 <h4 class="mb-2 mt-3 text-dark">Masuk ke Akun Kamu</h4>
                 <p class="text-secondary">Selamat datang di ChartTKJ !</p>
                 <form action="{{route ('login') }}" id="loginForm" class="mt-4 pt-2" method="POST">

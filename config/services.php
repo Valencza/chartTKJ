@@ -45,6 +45,6 @@ return [
         'is_3ds' => true,
     ],
 
-    'finish_redirect_url' => env('MIDTRANS_FINISH_REDIRECT_URL', 'https://chart-tkj.catalogrpl.com/checkout/invoice-barang'),
+    'finish_redirect_url' => env('MIDTRANS_FINISH_REDIRECT_URL', 'http://127.0.0.1:8000/checkout/invoice-barang'),
 
 ];

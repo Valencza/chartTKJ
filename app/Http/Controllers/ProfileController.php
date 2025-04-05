@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Models\User;
 
 class ProfileController extends Controller
@@ -46,24 +47,21 @@ class ProfileController extends Controller
             }
         }
 
-        // Proses upload foto profil jika ada
-        if ($request->hasFile('gambar')) {
-            $file = $request->file('gambar');
-            $fileName = time() . '.' . $file->getClientOriginalExtension(); // Buat nama unik
-            $filePath = 'img/profil/' . $fileName; // Path untuk storage
-
-            // Hapus foto lama jika ada dan bukan URL dari Google
-            if ($user->gambar && !filter_var($user->gambar, FILTER_VALIDATE_URL)) {
-                $oldImagePath = str_replace('storage/', '', $user->gambar); // Hapus "storage/" agar cocok dengan path storage
-                Storage::disk('public')->delete($oldImagePath);
+        // Penanganan gambar pakai move()
+    if ($request->hasFile('gambar')) {
+        // Hapus gambar lama jika bukan dari Google (bukan URL eksternal)
+        if ($user->gambar && !filter_var($user->gambar, FILTER_VALIDATE_URL)) {
+            $oldImagePath = public_path($user->gambar);
+            if (file_exists($oldImagePath)) {
+                unlink($oldImagePath);
             }
-
-            // Simpan gambar baru ke storage (storage/app/public/img/profil)
-            $file->storeAs('public/' . $filePath);
-
-            // Simpan path gambar ke database (dengan prefix 'storage/')
-            $user->gambar = 'storage/' . $filePath;
         }
+
+        $image = $request->file('gambar');
+        $filename = Str::slug($user->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
+        $image->move(public_path('img/profil'), $filename);
+        $user->gambar = 'img/profil/' . $filename;
+    }
 
         $user->save();
 

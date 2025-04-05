@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Portofolio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AdminPortofolioController extends Controller
 {
@@ -27,11 +28,16 @@ class AdminPortofolioController extends Controller
                 'tanggalProyek' => 'required|date', // Pastikan ini format tanggal
             ]);
 
+            // Upload gambar jika ada
             if ($request->hasFile('gambar')) {
-                $imagePath = $request->file('gambar')->store('img/portofolio', 'public');
-                $validatedData['gambar'] = $imagePath;
-            }
+                $image = $request->file('gambar');
+                $filename = Str::slug($request->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
 
+                $image->move(public_path('img/portofolio'), $filename);
+
+                $validatedData['gambar'] = 'img/portofolio/' . $filename;
+            }
+            
             // Handle spesifikasi (Menyimpan hanya 'spesifikasi_key')
             // Handle detail (Bisa lebih dari 1)
             $details = [];
@@ -81,19 +87,22 @@ class AdminPortofolioController extends Controller
 
         // Check if the image is being updated
         if ($request->hasFile('gambar')) {
-            // Delete the old image if it exists
-            if ($portofolio->gambar && Storage::exists('public/' . $portofolio->gambar)) {
-                Storage::delete('public/' . $portofolio->gambar);
+            // Hapus gambar lama jika ada
+            if ($portofolio->gambar && file_exists(public_path($portofolio->gambar))) {
+                unlink(public_path($portofolio->gambar));
             }
 
-            // Upload the new image to the specified folder
-            $imagePath = $request->file('gambar')->store('img/portofolio', 'public');
-            $validatedData['gambar'] = 'img/portofolio/' . basename($imagePath); // Store relative image path
+            // Simpan gambar baru
+            $image = $request->file('gambar');
+            $filename = Str::slug($request->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
+
+            $image->move(public_path('img/portofolio'), $filename);
+
+            $validatedData['gambar'] = 'img/portofolio/' . $filename;
         } else {
-            // If no new image is uploaded, retain the old image path
             $validatedData['gambar'] = $portofolio->gambar;
         }
-
+        
         // Simpan detail dalam JSON
         if ($request->has('detail_key')) {
             $detail = [];

@@ -21,6 +21,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\InformasiTanggalController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\jasaLayananController;
@@ -65,13 +66,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/google', [GoogleController::class, 'redirectToGoogle'])->name('google');
 Route::get('/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-
 //landing
 
-Route::get('/', function () {
-    return view('home.index');
-})->name('index');
-
+Route::get('/', [IndexController::class, 'index'])->name('index');
+Route::post('/show-ulasan-user', [IndexController::class, 'show'])->name('detail.ulasanUser');
 Route::post('/ulasan-user', [UlasanUserController::class, 'store'])->name('storeUlasanUser');
 
 Route::get('/notifikasi', [NotifikasiController::class, 'index']);
