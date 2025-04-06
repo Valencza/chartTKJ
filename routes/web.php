@@ -130,7 +130,6 @@ Route::get('/portofolio/{slug}', [portofolioController::class, 'detailportfolio'
 
 // Route::get('/service', [layananController::class, 'index'])->name('service');
 
-
 Route::get('/service', [serviceController::class, 'index'])->name('service');
 
 Route::get('/get-kerusakan/{barang_id}', [serviceController::class, 'getJenisKerusakan']);
