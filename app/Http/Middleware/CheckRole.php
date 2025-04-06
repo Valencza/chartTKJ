@@ -8,19 +8,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-    
-    public function handle($request, Closure $next, $role)
-{
-    if (!auth()->user() || !auth()->user()->hasRole($role)) {
-        return redirect('/home'); // Redirect ke halaman lain jika tidak memiliki role
+    public function handle(Request $request, Closure $next, ...$roles): Response
+    {
+        if (auth()->check() && in_array(auth()->user()->role, $roles)) {
+            return $next($request);
+        }
+
+        return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
     }
-
-    return $next($request);
-}
-
 }

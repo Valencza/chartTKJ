@@ -29,7 +29,7 @@
         <div class="container d-flex justify-content-center align-items-center">
             <div class="col-lg-10 col-md-10 col-11">
                 <div class="card shadow p-4">
-                    <img src="{{ asset($portofolioDetail->gambar) }}"
+                    <img src="{{ asset('storage/' . $portofolioDetail->gambar) }}"
                         alt="{{ $portofolioDetail->nama }}"
                         class="img-fluid w-100 object-fit-cover mb-4 rounded"
                         style="max-height: 500px; height: auto;">

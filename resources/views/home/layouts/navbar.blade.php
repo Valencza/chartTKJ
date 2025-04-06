@@ -71,8 +71,8 @@
             </a>
           </li>
           <li>
-            <a class="nav-link mx-xxl-3 mx-md-0 mx-0 {{ Request::is('service') ? 'active' : '' }}" 
-            href="{{route ('service') }}">Layanan</a>
+            <a class="nav-link mx-xxl-3 mx-md-0 mx-0 {{ Request::is('service') ? 'active' : '' }}"
+              href="{{route ('service') }}">Layanan</a>
           </li>
         </ul>
       </div>
@@ -108,8 +108,8 @@
             </a>
           </li>
           <li>
-            <a class="nav-link mx-xxl-3 mx-md-0 mx-0 {{ Request::is('service') ? 'active' : '' }}" 
-            href="{{route ('service') }}">Layanan</a>
+            <a class="nav-link mx-xxl-3 mx-md-0 mx-0 {{ Request::is('service') ? 'active' : '' }}"
+              href="{{route ('service') }}">Layanan</a>
           </li>
         </ul>
         <div class="d-flex button-masuk">

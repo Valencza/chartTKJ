@@ -252,7 +252,6 @@
                                                 <div class="card-body pt-0 px-0 pb-0 my-3 text-start">
                                                     <div class="col px-4">
                                                         <h5 class="card-title">{{ $product->nama }}</h5>
-
                                                         @php
                                                         $maxLength = 80; // Batasi hingga sekitar 80 karakter
                                                         $deskripsi = Str::limit($product->deskripsi, $maxLength, '...');

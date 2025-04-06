@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Str;
 
 class ProfileController extends Controller
 {
@@ -48,20 +48,20 @@ class ProfileController extends Controller
         }
 
         // Penanganan gambar pakai move()
-    if ($request->hasFile('gambar')) {
-        // Hapus gambar lama jika bukan dari Google (bukan URL eksternal)
-        if ($user->gambar && !filter_var($user->gambar, FILTER_VALIDATE_URL)) {
-            $oldImagePath = public_path($user->gambar);
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika bukan dari Google (bukan URL eksternal)
+            if ($user->gambar && !filter_var($user->gambar, FILTER_VALIDATE_URL)) {
+                $oldImagePath = public_path($user->gambar);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
             }
-        }
 
-        $image = $request->file('gambar');
-        $filename = Str::slug($user->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path('img/profil'), $filename);
-        $user->gambar = 'img/profil/' . $filename;
-    }
+            $image = $request->file('gambar');
+            $filename = Str::slug($user->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('img/profil'), $filename);
+            $user->gambar = 'img/profil/' . $filename;
+        }
 
         $user->save();
 

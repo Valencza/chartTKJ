@@ -39,6 +39,10 @@
 						</div>
 						<div class="separator my-2"></div>
 						<div class="menu-item px-5">
+							<a href="{{route ('pengaturan-akun') }}" class="menu-link keluar px-5">Setting Akun</a>
+						</div>
+						<div class="separator my-2"></div>
+						<div class="menu-item px-5">
 							<form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
 								@csrf
 							</form>

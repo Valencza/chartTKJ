@@ -55,14 +55,14 @@
                                         data-bs-target="#tanggalDiterimaModal"
                                         data-id="{{ $tanggal->servis_barang_id }}"
                                         data-tanggal="{{ $tanggal->tanggal_diterima }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-inbox fs-2"></i>
                                     </button>
                                     <button class="btn btn-icon btn-outline btn-outline-success btn-sm btn-diserahkan"
                                         data-bs-toggle="modal"
                                         data-bs-target="#tanggalDiserahkanModal"
                                         data-id="{{ $tanggal->servis_barang_id }}"
                                         data-tanggal="{{ $tanggal->tanggal_diserahkan }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-paper-plane fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

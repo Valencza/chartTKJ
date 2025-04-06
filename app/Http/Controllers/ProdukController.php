@@ -40,15 +40,15 @@ class ProdukController extends Controller
 
             // Proses upload gambar dengan kompresi (optional)
             if ($request->hasFile('gambar')) {
-    $image = $request->file('gambar');
-    $namaFile = Str::slug($request->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
+                $image = $request->file('gambar');
+                $namaFile = Str::slug($request->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
 
-    // Simpan langsung ke public/img/produk
-    $image->move(public_path('img/produk'), $namaFile);
+                // Simpan langsung ke public/img/produk
+                $image->move(public_path('img/produk'), $namaFile);
 
-    // Simpan path ke database
-    $validatedData['gambar'] = 'img/produk/' . $namaFile;
-}
+                // Simpan path ke database
+                $validatedData['gambar'] = 'img/produk/' . $namaFile;
+            }
 
             // Handle spesifikasi (Mendukung lebih dari 1 spesifikasi) //
             $spesifikasi = [];
@@ -95,22 +95,22 @@ class ProdukController extends Controller
             ]);
 
             // Jika ada gambar baru
-        if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
-            if ($produk->gambar && file_exists(public_path($produk->gambar))) {
-                unlink(public_path($produk->gambar));
+            if ($request->hasFile('gambar')) {
+                // Hapus gambar lama jika ada
+                if ($produk->gambar && file_exists(public_path($produk->gambar))) {
+                    unlink(public_path($produk->gambar));
+                }
+
+                // Upload gambar baru
+                $image = $request->file('gambar');
+                $namaFile = Str::slug($request->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
+
+                // Simpan langsung ke public/img/produk
+                $image->move(public_path('img/produk'), $namaFile);
+
+                // Simpan path ke database
+                $validatedData['gambar'] = 'img/produk/' . $namaFile;
             }
-
-            // Upload gambar baru
-            $image = $request->file('gambar');
-            $namaFile = Str::slug($request->nama) . '-' . time() . '.' . $image->getClientOriginalExtension();
-
-            // Simpan langsung ke public/img/produk
-            $image->move(public_path('img/produk'), $namaFile);
-
-            // Simpan path ke database
-            $validatedData['gambar'] = 'img/produk/' . $namaFile;
-        }
 
 
             // Simpan spesifikasi dalam JSON
@@ -146,8 +146,8 @@ class ProdukController extends Controller
             $produk = Produk::findOrFail($id);
 
             // Hapus gambar jika ada sebelum menghapus produk
-            if ($produk->gambar && Storage::exists('public/' . $produk->gambar)) {
-                Storage::delete('public/' . $produk->gambar);
+            if ($produk->gambar && file_exists(public_path($produk->gambar))) {
+                unlink(public_path($produk->gambar));
             }
 
             $produk->delete();
@@ -163,6 +163,8 @@ class ProdukController extends Controller
             ]);
         }
     }
+
+
 
     public function edit($id)
     {

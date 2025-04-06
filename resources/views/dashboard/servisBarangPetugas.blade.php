@@ -53,7 +53,7 @@
                                         data-bs-target="#editStatusModal"
                                         data-id="{{ $servis->id }}"
                                         data-proses="{{ $servis->proses }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

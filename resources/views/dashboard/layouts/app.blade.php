@@ -20,6 +20,22 @@
             document.documentElement.setAttribute("data-bs-theme", themeMode);
         }
     </script>
+    
+    @if(session('error'))
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Akses Ditolak',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'OK'
+                });
+            }, 500);
+        });
+    </script>
+    @endif
+    
     <!--end::Theme mode setup on page load-->
     <!--begin::App-->
     <div class="d-flex flex-column flex-root app-root" id="kt_app_root">

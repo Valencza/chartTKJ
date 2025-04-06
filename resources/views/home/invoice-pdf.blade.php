@@ -1,19 +1,46 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid black; padding: 10px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .text-end { text-align: right; }
-        .text-center { text-align: center; }
-        .fw-bold { font-weight: bold; }
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .fw-bold {
+            font-weight: bold;
+        }
     </style>
 </head>
+
 <body>
 
     <h2 class="fw-bold">Invoice</h2>
@@ -56,10 +83,11 @@
         </tbody>
     </table>
 
-    <p><strong>Catatan:</strong> 
+    <p><strong>Catatan:</strong>
     <p>Barang yang sudah dibeli <strong>tidak dapat dikembalikan</strong>, kecuali ada cacat produksi.</p>
     <p>Simpan invoice ini sebagai <strong>pembelian yang sah</strong>.</p>
-    <p>Jika ada pertanyaan, silakan hubungi <strong>customer service kami</strong>.</p>   
+    <p>Jika ada pertanyaan, silakan hubungi <strong>customer service kami</strong>.</p>
 
 </body>
+
 </html>

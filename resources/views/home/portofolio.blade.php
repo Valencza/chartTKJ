@@ -53,7 +53,7 @@
                     @foreach ($portofolios as $index => $portofolio)
                     <div class="col-lg-4 col-md-6 col-12 mb-4 portfolio-item {{ $index >= 6 ? 'd-none' : '' }}">
                         <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                            <img src="{{ asset($portofolio->gambar) }}" class=" img-fluid" alt="{{ $portofolio->nama }}">
+                            <img src="{{ asset('storage/' . $portofolio->gambar) }}" class=" img-fluid" alt="{{ $portofolio->nama }}">
                             <div class="card-body" style="height: auto;">
                                 <h5 class="" style="font-weight: 700;">{{ $portofolio->nama }}</h5>
                                 <p class="text-muted">{{ Str::limit($portofolio->deskripsi, 100) }}</p>
@@ -98,11 +98,11 @@
 
         if (showMoreBtn) {
             showMoreBtn.addEventListener("click", function() {
-                let hiddenItems = document.querySelectorAll(".portfolio-item.d-none"); 
+                let hiddenItems = document.querySelectorAll(".portfolio-item.d-none");
                 let count = 0;
 
                 hiddenItems.forEach((item) => {
-                    if (count < 3) { 
+                    if (count < 3) {
                         item.classList.remove("d-none");
                         count++;
                     }
@@ -128,7 +128,7 @@
                         // **Hapus event listener agar tombol tidak bisa diklik lagi**
                         showMoreBtn.removeEventListener("click", arguments.callee);
                     }
-                }, 100); 
+                }, 100);
             });
         }
     });

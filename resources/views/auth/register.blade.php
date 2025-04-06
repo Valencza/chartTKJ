@@ -9,7 +9,7 @@
   <div class="row w-100">
     <div class="col-xxl-6 col-lg-6 d-flex align-items-center justify-content-center">
       <div class="login-form mt-4">
-        <img src="{{asset ('assets/user/img/logo.svg') }}" alt="Logo" class="mb-2 mt-5" style="max-width: 160px;">
+        <img src="{{asset ('assets/user/img/LOGO.svg') }}" alt="Logo" class="mb-2 mt-5" style="max-width: 160px;">
         <h4 class="mb-2 mt-3 text-dark text-start">Daftar untuk Mulai</h4>
         <p class="text-secondary mb-4 text-start">Selamat datang di ChartTKJ !</p>
         <form action="{{route ('register') }}" id="registForm" method="POST">

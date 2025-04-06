@@ -59,13 +59,13 @@
                                         data-bs-target="#editStatusModal"
                                         data-id="{{ $jasa->id }}"
                                         data-status="{{ $jasa->status }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                     <button class="btn btn-icon btn-outline btn-outline-success btn-sm btn-pilih-petugas"
                                         data-bs-toggle="modal"
                                         data-bs-target="#modalPenugasan"
                                         data-id="{{ $jasa->id }}">
-                                        <i class="ki-duotone ki-user fs-2"></i>
+                                        <i class="fas fa-user-check fs-2"></i>
                                     </button>
                                     <!-- Tombol Edit Tanggal -->
                                     <button class="btn btn-icon btn-outline btn-outline-warning btn-sm btn-edit-tanggal"
@@ -73,7 +73,7 @@
                                         data-bs-target="#editTanggalModal"
                                         data-id="{{ $jasa->id }}"
                                         data-tanggal="{{ $jasa->tanggal }}">
-                                        <i class="ki-duotone ki-calendar fs-2"></i>
+                                        <i class="fas fa-clock fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

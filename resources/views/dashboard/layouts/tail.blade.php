@@ -324,35 +324,34 @@
 <!-- js alert keluar -->
 <script>
 	document.getElementById("btnLogout").addEventListener("click", function(event) {
-    event.preventDefault();
+		event.preventDefault();
 
-    Swal.fire({
-        title: "Apakah Anda yakin?",
-        text: "Anda akan keluar dari sesi ini!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Keluar",
-        cancelButtonText: "Batal",
-        customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: "btn btn-danger"
-        },
-        buttonsStyling: false
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('logoutForm').submit();
-        } else {
-            Swal.fire({
-                icon: "info",
-                title: "Logout Dibatalkan",
-                text: "Anda tetap berada di halaman ini.",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        }
-    });
-});
-
+		Swal.fire({
+			title: "Apakah Anda yakin?",
+			text: "Anda akan keluar dari sesi ini!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonText: "Ya, Keluar",
+			cancelButtonText: "Batal",
+			customClass: {
+				confirmButton: "btn btn-primary",
+				cancelButton: "btn btn-danger"
+			},
+			buttonsStyling: false
+		}).then((result) => {
+			if (result.isConfirmed) {
+				document.getElementById('logoutForm').submit();
+			} else {
+				Swal.fire({
+					icon: "info",
+					title: "Logout Dibatalkan",
+					text: "Anda tetap berada di halaman ini.",
+					showConfirmButton: false,
+					timer: 1500
+				});
+			}
+		});
+	});
 </script>
 
 <!-- alert edit -->

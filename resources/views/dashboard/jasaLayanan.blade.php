@@ -45,7 +45,7 @@
                                 <td>Rp. {{ number_format($jenisLayanan->harga, 0, ',', '.') }}</td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn btn-outline btn-outline-primary btn-active-light-primary btn-sm btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" data-bs-target="#editKategoriModal" data-bs-toggle="modal">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                     <button class="btn btn-icon btn btn-outline btn-outline-danger btn-active-light-danger btn-sm"
                                         data-kt-permissions-table-filter="delete_row"
@@ -53,7 +53,7 @@
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Hapus">
-                                        <i class="ki-duotone ki-trash fs-2"></i>
+                                        <i class="fas fa-trash-alt fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

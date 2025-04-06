@@ -42,14 +42,14 @@ class ServisJasa extends Model
 
     public function jenisJasa()
     {
-        return $this->belongsTo(JenisLayanan::class, 'jenis_jasa_id');
+        return $this->belongsTo(jenisLayanan::class, 'jenis_jasa_id');
     }
 
     // App\Models\ServisJasa.php
 
     public function jenisLayanan()
     {
-        return $this->belongsTo(JenisLayanan::class, 'jenis_layanan_id');
+        return $this->belongsTo(jenisLayanan::class, 'jenis_layanan_id');
     }
 
 

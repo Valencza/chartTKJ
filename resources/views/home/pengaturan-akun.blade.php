@@ -167,15 +167,15 @@
 </script>
 
 <script>
-function formatPhoneNumber(input) {
-    let value = input.value.replace(/\D/g, ''); // Hanya angka
-    if (value.length > 4 && value.length <= 8) {
-        value = value.replace(/(\d{4})(\d+)/, '$1-$2');
-    } else if (value.length > 8) {
-        value = value.replace(/(\d{4})(\d{4})(\d+)/, '$1-$2-$3');
+    function formatPhoneNumber(input) {
+        let value = input.value.replace(/\D/g, ''); // Hanya angka
+        if (value.length > 4 && value.length <= 8) {
+            value = value.replace(/(\d{4})(\d+)/, '$1-$2');
+        } else if (value.length > 8) {
+            value = value.replace(/(\d{4})(\d{4})(\d+)/, '$1-$2-$3');
+        }
+        input.value = value;
     }
-    input.value = value;
-}
 </script>
 
 <script>

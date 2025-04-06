@@ -1,20 +1,19 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Middleware;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class Alamat extends Model
+class CheckRole
 {
-    use HasFactory;
-
-    protected $table = 'alamat';
-    protected $fillable = ['id_user', 'nama', 'no_telpon', 'alamat'];
-
-    // Relasi ke User
-    public function user()
+    public function handle(Request $request, Closure $next, string $role)
     {
-        return $this->belongsTo(User::class);
+        if (!Auth::check() || Auth::user()->role !== $role) {
+            return redirect('/')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+        }
+
+        return $next($request);
     }
 }

@@ -32,16 +32,12 @@
                         </thead>
                         <tbody class="fw-semibold text-gray-700">
                             @foreach ($servisBarang as $barang)
+                            @if ($barang->notifikasi->isNotEmpty())
+                            @foreach ($barang->notifikasi as $notif)
                             <tr>
                                 <td class="text-center">{{ $barang->order_id }}</td>
                                 <td>
-                                    @if ($barang->notifikasi->isNotEmpty())
-                                    @foreach ($barang->notifikasi as $notif)
-                                    <div>{{ $notif->pesan }}</div>
-                                    @endforeach
-                                    @else
-                                    Tidak ada notifikasi
-                                    @endif
+                                    <div>{{ $notif->pesan}}</div>
                                 </td>
                                 <td>{{ $barang->user->nama ?? 'Tidak Tersedia' }}</td>
                                 <td>{{ $barang->jenisBarang->nama }}</td>
@@ -51,6 +47,22 @@
                                 </td>
                                 <td>{{ $barang->proses }}</td>
                             </tr>
+                            @endforeach
+                            @else
+                            <tr>
+                                <td class="text-center">{{ $barang->order_id }}</td>
+                                <td>
+                                    <div>Notifikasi Tidak Tersedia</div>
+                                </td>
+                                <td>{{ $barang->user->nama ?? 'Tidak Tersedia' }}</td>
+                                <td>{{ $barang->jenisBarang->nama }}</td>
+                                <td>{{ $barang->jenisKerusakan->nama }}</td>
+                                <td>
+                                    {{ $barang->servisBarangPetugas->petugas->nama ?? 'Belum Ditugaskan' }}
+                                </td>
+                                <td>{{ $barang->proses }}</td>
+                            </tr>
+                            @endif
                             @endforeach
 
                         </tbody>

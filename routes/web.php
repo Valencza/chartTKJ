@@ -52,6 +52,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use App\Http\Middleware\CheckRole;
 
 //auth
 
@@ -161,213 +162,216 @@ Route::get('/invoice/jasa/{order_id}', [RiwayatController::class, 'showInvoiceJa
 //dashboard
 
 // Route untuk halaman dashboard
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth', 'check.role:admin,petugas'])->group(function () {
 
-// Route untuk mengambil data pendapatan grafik
-Route::get('/api/get-pendapatan-grafik', [DashboardController::class, 'getPendapatanGrafik']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/api/get-servisproduk-by-date', function (Request $request) {
-    $date = Carbon::parse($request->query('date'))->format('Y-m-d');
+    // Route untuk mengambil data pendapatan grafik
+    Route::get('/api/get-pendapatan-grafik', [DashboardController::class, 'getPendapatanGrafik']);
 
-    if (!$date) {
-        return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
-    }
+    Route::get('/api/get-servisproduk-by-date', function (Request $request) {
+        $date = Carbon::parse($request->query('date'))->format('Y-m-d');
 
-    try {
-        $data = DB::table('order_items')
-            ->whereDate('created_at', $date)
-            ->sum('subtotal');
+        if (!$date) {
+            return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
+        }
 
-        return response()->json([
-            'labels' => [$date],
-            'data' => [$data]
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
+        try {
+            $data = DB::table('order_items')
+                ->whereDate('created_at', $date)
+                ->sum('subtotal');
+
+            return response()->json([
+                'labels' => [$date],
+                'data' => [$data]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+
+    Route::get('/api/get-servisbarang-grafik', [DashboardController::class, 'getPendapatanServis']);
+
+    Route::get('/api/get-servisbarang-by-date', function (Request $request) {
+        $date = Carbon::parse($request->query('date'))->format('Y-m-d');
+
+        if (!$date) {
+            return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
+        }
+
+        try {
+            $data = DB::table('servis_barang')
+                ->whereDate('created_at', $date)
+                ->sum('harga');
+
+            return response()->json([
+                'labels' => [$date],
+                'data' => [$data]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+
+    Route::get('/api/get-servislayanan-grafik', [DashboardController::class, 'getPendapatanLayanan']);
+
+    Route::get('/api/get-servislayanan-by-date', function (Request $request) {
+        $date = Carbon::parse($request->query('date'))->format('Y-m-d');
+
+        if (!$date) {
+            return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
+        }
+
+        try {
+            $data = DB::table('servis_jasa')
+                ->whereDate('created_at', $date)
+                ->sum('harga');
+
+            return response()->json([
+                'labels' => [$date],
+                'data' => [$data]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    });
+
+    //dashboard.produk
+
+    Route::get('/dashboard/produk', [ProdukController::class, 'index'])->name('produk');
+    Route::post('/dashboard/produk/store', [ProdukController::class, 'store'])->name('produk.store');
+    Route::put('/dashboard/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
+    Route::delete('/dashboard/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
+
+    //dashboard.produk-stok
+
+    Route::get('/dashboard/stok-produk', [AdminStokController::class, 'index'])->name('stok');
+    Route::put('/dashboard/stok-produk/{id}', [AdminStokController::class, 'update'])->name('stok.update');
+
+
+    Route::get('/get-product/{id}', [ProdukController::class, 'getProduct']);
+
+    //dashboard.kategori-produk
+
+    Route::get('/dashboard/kategori-produk', [KategoriProdukController::class, 'index'])->name('kategoriProduk');
+    Route::post('/dashboard/kategori-produk/store', [KategoriProdukController::class, 'store'])->name('kategoriProduk.store');
+    Route::put('/dashboard/kategori-produk/{id}', [KategoriProdukController::class, 'update'])->name('kategoriProduk.update');
+    Route::delete('/dashboard/kategori-produk/{id}', [KategoriProdukController::class, 'destroy'])->name('kategoriProduk.destroy');
+
+    //dashboard.kategori-service-barang
+
+    Route::get('/dashboard/jenis-barang', [jenisBarangController::class, 'index'])->name('jenisBarang');
+    Route::post('/dashboard/jenis-barang/store', [jenisBarangController::class, 'store'])->name('jenisBarang.store');
+    Route::put('/dashboard/jenis-barang/{id}', [jenisBarangController::class, 'update'])->name('jenisBarang.update');
+    Route::delete('/dashboard/jenis-barang/{id}', [jenisBarangController::class, 'destroy'])->name('jenisBarang.destroy');
+
+    //dashboard.kategori-service-jasa
+
+    Route::get('/dashboard/kategori-jasa', [kategoriJasaController::class, 'index'])->name('kategoriJasa');
+    Route::post('/dashboard/kategori-jasa/store', [kategoriJasaController::class, 'store'])->name('kategoriJasa.store');
+    Route::put('/dashboard/kategori-jasa/{id}', [kategoriJasaController::class, 'update'])->name('kategoriJasa.update');
+    Route::delete('/dashboard/kategori-jasa/{id}', [kategoriJasaController::class, 'destroy'])->name('kategoriJasa.destroy');
+
+    //dashboard.jenis-layanan
+
+    Route::get('/dashboard/jenis-layanan', [jenisLayananController::class, 'index'])->name('jenisLayanan');
+    Route::post('/dashboard/jenis-layanan/store', [jenisLayananController::class, 'store'])->name('jenisLayanan.store');
+    Route::put('/dashboard/jenis-layanan/{id}', [jenisLayananController::class, 'update'])->name('jenisLayanan.update');
+    Route::delete('/dashboard/jenis-layanan/{id}', [jenisLayananController::class, 'destroy'])->name('jenisLayanan.destroy');
+
+    //dashboard.jasa-kerusakan-barang
+
+    Route::get('/dashboard/jenis-kerusakan', [jenisKerusakanController::class, 'index'])->name('jenisKerusakan');
+    Route::post('/dashboard/jenis-kerusakan/store', [jenisKerusakanController::class, 'store'])->name('jenisKerusakan.store');
+    Route::put('/dashboard/jenis-kerusakan/{id}', [jenisKerusakanController::class, 'update'])->name('jenisKerusakan.update');
+    Route::delete('/dashboard/jenis-kerusakan/{id}', [jenisKerusakanController::class, 'destroy'])->name('jenisKerusakan.destroy');
+
+    //dashboard.order-produk
+
+    Route::get('/order', [AdminOrderController::class, 'index'])->name('order');
+    Route::put('/order/{id}', [AdminOrderController::class, 'update'])->name('order.update');
+
+    //dashboard.order-servis-barang
+
+    Route::get('/order-servis-barang', [adminServiceBarangController::class, 'index'])->name('orderServisBarang');
+    Route::put('/order-servis-barang/{id}', [adminServiceBarangController::class, 'update'])->name('orderServisBarang.update');
+    Route::post('/order-servis-barang', [adminServiceBarangController::class, 'petugas'])->name('orderServisBarang.petugas');
+
+    //dashboard.servis-barang-petugas
+
+    Route::get('/order-servis-barang-petugas', [AdminServisBarangPetugasController::class, 'index'])->name('servisBarangPetugas');
+    Route::put('/order-servis-barang-petugas/{id}', [AdminServisBarangPetugasController::class, 'update'])->name('servisBarangPetugas.update');
+
+    //dashboard.servis-layanan-petugas
+
+    Route::get('/order-servis-layanan-petugas', [AdminServisLayananPetugasController::class, 'index'])->name('servisLayananPetugas');
+    Route::put('/order-servis-layanan-petugas/{id}', [AdminServisLayananPetugasController::class, 'update'])->name('servisLayananPetugas.update');
+
+    //dashboard.order-servis-layanan
+
+    Route::get('/dashboard/servis-layanan', [AdminservisLayananController::class, 'index'])->name('orderServisLayanan');
+    Route::put('/dashboard/servis-layanan/{id}', [AdminservisLayananController::class, 'update'])->name('orderServisLayanan.update');
+    Route::post('/dashboard/servis-layanan', [AdminservisLayananController::class, 'petugas'])->name('orderServisLayanan.petugas');
+    Route::put('/dashboard/servis-layanan/update-tanggal/{id}', [AdminservisLayananController::class, 'updateTanggal'])->name('servis-jasa.update-tanggal');
+
+    //dashboard.informasi-tanggal
+
+    Route::prefix('dashboard/informasi-tanggal')->controller(InformasiTanggalController::class)->group(function () {
+        Route::get('/', 'index')->name('informasi-tanggal.index'); // Ganti dari 'informasiTanggal' ke 'index'
+        Route::put('/terima/{id}', 'updateDiterima')->name('informasi-tanggal.terima'); // Sesuai method di controller
+        Route::put('/serahkan/{id}', 'updateDiserahkan')->name('informasi-tanggal.serahkan'); // Sesuai method di controller
+    });
+
+    //dashboard.informasi-tanggal-jasa
+
+    Route::prefix('dashboard/informasi-tanggal-jasa')->controller(AdminInformasiTanggalJasaController::class)->group(function () {
+        Route::get('/', 'index')->name('informasi-tanggal-jasa.index'); // Ganti dari 'informasiTanggal' ke 'index'
+    });
+
+
+
+    //dashboard.portofolio
+
+    Route::get('/dashboard/portofolio', [PortofolioController::class, 'index'])->name('portofolio');
+    Route::post('/dashboard/portofolio/store', [PortofolioController::class, 'store'])->name('portofolio.store');
+    Route::put('/dashboard/portofolio/{id}', [PortofolioController::class, 'update'])->name('portofolio.update');
+    Route::delete('/dashboard/portofolio/{id}', [PortofolioController::class, 'destroy'])->name('portofolio.destroy');
+
+    //dashboard.user-role
+
+    Route::get('/dashboard/user', [AdminEditRoleController::class, 'index'])->name('user');
+    Route::put('/dashboard/user/{id}', [AdminEditRoleController::class, 'update'])->name('user.update');
+
+    //dashboard.ulasan-produk
+
+    Route::get('/dashboard/ulasan-produk', [AdminUlasanProdukController::class, 'index'])->name('ulasan');
+    Route::delete('/dashboard/ulasan-produk/{id}', [AdminUlasanProdukController::class, 'destroy'])->name('ulasan.destroy');
+
+    //dashboard.ulasan-pengguna
+
+    Route::get('/dashboard/ulasan-pengguna', [AdminUlasanUserController::class, 'index'])->name('ulasanUser');
+    Route::delete('/dashboard/ulasan-pengguna/{id}', [AdminUlasanUserController::class, 'destroy'])->name('ulasanUser.destroy');
+
+    //dashboard.portofolio
+
+    Route::get('/dashboard/portofolio', [AdminPortofolioController::class, 'index'])->name('portofolio');
+    Route::post('/dashboard/portofolio/store', [AdminPortofolioController::class, 'store'])->name('portofolio.store');
+    Route::put('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'update'])->name('portofolio.update');
+    Route::delete('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'destroy'])->name('portofolio.destroy');
+
+    //dashboard.notifikasi-produk
+
+    Route::get('/dashboard/notifikasi/produk', [AdminNotifikasiProdukController::class, 'index'])->name('notifikasi.produk');
+
+    //dashboard.notifikasi-servis-barang
+
+    Route::get('/dashboard/notifikasi/servis-barang', [AdminNotifikasiServisBarangController::class, 'index'])->name('notifikasi.servisBarang');
+
+    //dashboard.notifikasi-servis-jasa
+
+    Route::get('/dashboard/notifikasi/servis-layanan', [AdminNotifikasiServisJasaController::class, 'index'])->name('notifikasi.servisJasa');
+    Route::put('/dashboard/notifikasi/servis-layanan/update-tanggal/{id}', [AdminNotifikasiServisJasaController::class, 'updateTanggal'])->name('notifikasi.servis-jasa.update-tanggal');
 });
-
-Route::get('/api/get-servisbarang-grafik', [DashboardController::class, 'getPendapatanServis']);
-
-Route::get('/api/get-servisbarang-by-date', function (Request $request) {
-    $date = Carbon::parse($request->query('date'))->format('Y-m-d');
-
-    if (!$date) {
-        return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
-    }
-
-    try {
-        $data = DB::table('servis_barang')
-            ->whereDate('created_at', $date)
-            ->sum('harga');
-
-        return response()->json([
-            'labels' => [$date],
-            'data' => [$data]
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-});
-
-Route::get('/api/get-servislayanan-grafik', [DashboardController::class, 'getPendapatanLayanan']);
-
-Route::get('/api/get-servislayanan-by-date', function (Request $request) {
-    $date = Carbon::parse($request->query('date'))->format('Y-m-d');
-
-    if (!$date) {
-        return response()->json(['error' => 'Tanggal tidak dikirim'], 400);
-    }
-
-    try {
-        $data = DB::table('servis_jasa')
-            ->whereDate('created_at', $date)
-            ->sum('harga');
-
-        return response()->json([
-            'labels' => [$date],
-            'data' => [$data]
-        ]);
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-});
-
-//dashboard.produk
-
-Route::get('/dashboard/produk', [ProdukController::class, 'index'])->name('produk');
-Route::post('/dashboard/produk/store', [ProdukController::class, 'store'])->name('produk.store');
-Route::put('/dashboard/produk/{id}', [ProdukController::class, 'update'])->name('produk.update');
-Route::delete('/dashboard/produk/{id}', [ProdukController::class, 'destroy'])->name('produk.destroy');
-
-//dashboard.produk-stok
-
-Route::get('/dashboard/stok-produk', [AdminStokController::class, 'index'])->name('stok');
-Route::put('/dashboard/stok-produk/{id}', [AdminStokController::class, 'update'])->name('stok.update');
-
-
-Route::get('/get-product/{id}', [ProdukController::class, 'getProduct']);
-
-//dashboard.kategori-produk
-
-Route::get('/dashboard/kategori-produk', [KategoriProdukController::class, 'index'])->name('kategoriProduk');
-Route::post('/dashboard/kategori-produk/store', [KategoriProdukController::class, 'store'])->name('kategoriProduk.store');
-Route::put('/dashboard/kategori-produk/{id}', [KategoriProdukController::class, 'update'])->name('kategoriProduk.update');
-Route::delete('/dashboard/kategori-produk/{id}', [KategoriProdukController::class, 'destroy'])->name('kategoriProduk.destroy');
-
-//dashboard.kategori-service-barang
-
-Route::get('/dashboard/jenis-barang', [jenisBarangController::class, 'index'])->name('jenisBarang');
-Route::post('/dashboard/jenis-barang/store', [jenisBarangController::class, 'store'])->name('jenisBarang.store');
-Route::put('/dashboard/jenis-barang/{id}', [jenisBarangController::class, 'update'])->name('jenisBarang.update');
-Route::delete('/dashboard/jenis-barang/{id}', [jenisBarangController::class, 'destroy'])->name('jenisBarang.destroy');
-
-//dashboard.kategori-service-jasa
-
-Route::get('/dashboard/kategori-jasa', [kategoriJasaController::class, 'index'])->name('kategoriJasa');
-Route::post('/dashboard/kategori-jasa/store', [kategoriJasaController::class, 'store'])->name('kategoriJasa.store');
-Route::put('/dashboard/kategori-jasa/{id}', [kategoriJasaController::class, 'update'])->name('kategoriJasa.update');
-Route::delete('/dashboard/kategori-jasa/{id}', [kategoriJasaController::class, 'destroy'])->name('kategoriJasa.destroy');
-
-//dashboard.jenis-layanan
-
-Route::get('/dashboard/jenis-layanan', [jenisLayananController::class, 'index'])->name('jenisLayanan');
-Route::post('/dashboard/jenis-layanan/store', [jenisLayananController::class, 'store'])->name('jenisLayanan.store');
-Route::put('/dashboard/jenis-layanan/{id}', [jenisLayananController::class, 'update'])->name('jenisLayanan.update');
-Route::delete('/dashboard/jenis-layanan/{id}', [jenisLayananController::class, 'destroy'])->name('jenisLayanan.destroy');
-
-//dashboard.jasa-kerusakan-barang
-
-Route::get('/dashboard/jenis-kerusakan', [jenisKerusakanController::class, 'index'])->name('jenisKerusakan');
-Route::post('/dashboard/jenis-kerusakan/store', [jenisKerusakanController::class, 'store'])->name('jenisKerusakan.store');
-Route::put('/dashboard/jenis-kerusakan/{id}', [jenisKerusakanController::class, 'update'])->name('jenisKerusakan.update');
-Route::delete('/dashboard/jenis-kerusakan/{id}', [jenisKerusakanController::class, 'destroy'])->name('jenisKerusakan.destroy');
-
-//dashboard.order-produk
-
-Route::get('/order', [AdminOrderController::class, 'index'])->name('order');
-Route::put('/order/{id}', [AdminOrderController::class, 'update'])->name('order.update');
-
-//dashboard.order-servis-barang
-
-Route::get('/order-servis-barang', [adminServiceBarangController::class, 'index'])->name('orderServisBarang');
-Route::put('/order-servis-barang/{id}', [adminServiceBarangController::class, 'update'])->name('orderServisBarang.update');
-Route::post('/order-servis-barang', [adminServiceBarangController::class, 'petugas'])->name('orderServisBarang.petugas');
-
-//dashboard.servis-barang-petugas
-
-Route::get('/order-servis-barang-petugas', [AdminServisBarangPetugasController::class, 'index'])->name('servisBarangPetugas');
-Route::put('/order-servis-barang-petugas/{id}', [AdminServisBarangPetugasController::class, 'update'])->name('servisBarangPetugas.update');
-
-//dashboard.servis-layanan-petugas
-
-Route::get('/order-servis-layanan-petugas', [AdminServisLayananPetugasController::class, 'index'])->name('servisLayananPetugas');
-Route::put('/order-servis-layanan-petugas/{id}', [AdminServisLayananPetugasController::class, 'update'])->name('servisLayananPetugas.update');
-
-//dashboard.order-servis-layanan
-
-Route::get('/dashboard/servis-layanan', [AdminservisLayananController::class, 'index'])->name('orderServisLayanan');
-Route::put('/dashboard/servis-layanan/{id}', [AdminservisLayananController::class, 'update'])->name('orderServisLayanan.update');
-Route::post('/dashboard/servis-layanan', [AdminservisLayananController::class, 'petugas'])->name('orderServisLayanan.petugas');
-Route::put('/dashboard/servis-layanan/update-tanggal/{id}', [AdminservisLayananController::class, 'updateTanggal'])->name('servis-jasa.update-tanggal');
-
-//dashboard.informasi-tanggal
-
-Route::prefix('dashboard/informasi-tanggal')->controller(InformasiTanggalController::class)->group(function () {
-    Route::get('/', 'index')->name('informasi-tanggal.index'); // Ganti dari 'informasiTanggal' ke 'index'
-    Route::put('/terima/{id}', 'updateDiterima')->name('informasi-tanggal.terima'); // Sesuai method di controller
-    Route::put('/serahkan/{id}', 'updateDiserahkan')->name('informasi-tanggal.serahkan'); // Sesuai method di controller
-});
-
-//dashboard.informasi-tanggal-jasa
-
-Route::prefix('dashboard/informasi-tanggal-jasa')->controller(AdminInformasiTanggalJasaController::class)->group(function () {
-    Route::get('/', 'index')->name('informasi-tanggal-jasa.index'); // Ganti dari 'informasiTanggal' ke 'index'
-});
-
-
-
-//dashboard.portofolio
-
-Route::get('/dashboard/portofolio', [PortofolioController::class, 'index'])->name('portofolio');
-Route::post('/dashboard/portofolio/store', [PortofolioController::class, 'store'])->name('portofolio.store');
-Route::put('/dashboard/portofolio/{id}', [PortofolioController::class, 'update'])->name('portofolio.update');
-Route::delete('/dashboard/portofolio/{id}', [PortofolioController::class, 'destroy'])->name('portofolio.destroy');
-
-//dashboard.user-role
-
-Route::get('/dashboard/user', [AdminEditRoleController::class, 'index'])->name('user');
-Route::put('/dashboard/user/{id}', [AdminEditRoleController::class, 'update'])->name('user.update');
-
-//dashboard.ulasan-produk
-
-Route::get('/dashboard/ulasan-produk', [AdminUlasanProdukController::class, 'index'])->name('ulasan');
-Route::delete('/dashboard/ulasan-produk/{id}', [AdminUlasanProdukController::class, 'destroy'])->name('ulasan.destroy');
-
-//dashboard.ulasan-pengguna
-
-Route::get('/dashboard/ulasan-pengguna', [AdminUlasanUserController::class, 'index'])->name('ulasanUser');
-Route::delete('/dashboard/ulasan-pengguna/{id}', [AdminUlasanUserController::class, 'destroy'])->name('ulasanUser.destroy');
-
-//dashboard.portofolio
-
-Route::get('/dashboard/portofolio', [AdminPortofolioController::class, 'index'])->name('portofolio');
-Route::post('/dashboard/portofolio/store', [AdminPortofolioController::class, 'store'])->name('portofolio.store');
-Route::put('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'update'])->name('portofolio.update');
-Route::delete('/dashboard/portofolio/{id}', [AdminPortofolioController::class, 'destroy'])->name('portofolio.destroy');
-
-//dashboard.notifikasi-produk
-
-Route::get('/dashboard/notifikasi/produk', [AdminNotifikasiProdukController::class, 'index'])->name('notifikasi.produk');
-
-//dashboard.notifikasi-servis-barang
-
-Route::get('/dashboard/notifikasi/servis-barang', [AdminNotifikasiServisBarangController::class, 'index'])->name('notifikasi.servisBarang');
-
-//dashboard.notifikasi-servis-jasa
-
-Route::get('/dashboard/notifikasi/servis-layanan', [AdminNotifikasiServisJasaController::class, 'index'])->name('notifikasi.servisJasa');
-Route::put('/dashboard/notifikasi/servis-layanan/update-tanggal/{id}', [AdminNotifikasiServisJasaController::class, 'updateTanggal'])->name('notifikasi.servis-jasa.update-tanggal');
 
 //laravelPWA
 

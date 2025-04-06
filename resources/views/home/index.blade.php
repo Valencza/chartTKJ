@@ -237,8 +237,8 @@
                 <div class="testimonial-item">
                   <img src="{{ $ul->user && $ul->user->gambar ? asset($ul->user->gambar) : asset('assets/user/img/default-avatar.png') }}"
                     onerror="this.src='{{ asset('assets/user/img/default-avatar.png') }}';"
-                    class="testimonial-img" alt="{{ $ul->user->name ?? 'Pengguna' }}">
-                  <h3>{{ $ul->user->name ?? 'Pengguna' }}</h3>
+                    class="testimonial-img" alt="{{ $ul->user->nama ?? 'Pengguna' }}">
+                  <h3>{{ $ul->user->nama ?? 'Pengguna' }}</h3>
                   <div class="stars text-warning">
                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                   </div><br>

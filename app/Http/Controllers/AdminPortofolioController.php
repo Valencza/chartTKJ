@@ -37,7 +37,7 @@ class AdminPortofolioController extends Controller
 
                 $validatedData['gambar'] = 'img/portofolio/' . $filename;
             }
-            
+
             // Handle spesifikasi (Menyimpan hanya 'spesifikasi_key')
             // Handle detail (Bisa lebih dari 1)
             $details = [];
@@ -102,7 +102,7 @@ class AdminPortofolioController extends Controller
         } else {
             $validatedData['gambar'] = $portofolio->gambar;
         }
-        
+
         // Simpan detail dalam JSON
         if ($request->has('detail_key')) {
             $detail = [];
@@ -131,9 +131,9 @@ class AdminPortofolioController extends Controller
         $portofolio = Portofolio::find($id);
 
         if ($portofolio) {
-            // Cek jika gambar ada dan hapus dari storage
-            if ($portofolio->gambar && Storage::exists('public/' . $portofolio->gambar)) {
-                Storage::delete('public/' . $portofolio->gambar);
+            // Cek jika gambar ada dan hapus dari folder public/img/portofolio
+            if ($portofolio->gambar && file_exists(public_path($portofolio->gambar))) {
+                unlink(public_path($portofolio->gambar));
             }
 
             // Hapus data portofolio

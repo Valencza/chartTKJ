@@ -59,7 +59,7 @@
                                         data-bs-target="#editStatusModal"
                                         data-id="{{ $user->id }}"
                                         data-status="{{ $user->role }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

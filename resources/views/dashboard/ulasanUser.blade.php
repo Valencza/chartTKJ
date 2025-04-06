@@ -52,7 +52,7 @@
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Hapus">
-                                        <i class="ki-duotone ki-trash fs-2"></i>
+                                        <i class="fas fa-trash-alt fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

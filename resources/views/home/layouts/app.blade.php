@@ -6,6 +6,21 @@
 
 @include('home.layouts.navbar')
 
+@if(session('error'))
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        Swal.fire({
+          icon: 'error',
+          title: 'Akses Ditolak',
+          text: '{{ session('error') }}',
+          confirmButtonText: 'OK'
+        });
+      }, 500);
+    });
+  </script>
+@endif
+
 @yield('content')
 
 @include('home.layouts.modal', ['alamat' => $alamat ?? collect()])

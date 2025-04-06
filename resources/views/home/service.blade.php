@@ -636,7 +636,7 @@
                 @foreach ($portfolios as $portfolio)
                 <div class="col-lg-4 col-md-6 col-12 mb-4" data-aos-delay="50">
                     <div class="card mb-4 p-3 border-0 shadow" style="border-radius: 20px;">
-                        <img src="{{ asset('storage/' . $portfolio->gambar) }}" class="img-fluid" alt="{{ $portfolio->nama }}">
+                        <img src="{{ asset($portfolio->gambar) }}" class="img-fluid" alt="{{ $portfolio->nama }}">
                         <div class="card-body" style="height: auto;">
                             <h1 class="card-title fs-5 fw-bold">{{ $portfolio->nama }}</h1>
                             <p class="text-muted">{{ Str::limit($portfolio->deskripsi, 100) }}</p>

@@ -145,7 +145,7 @@
                                                 style="width: 110px; height: 90px; object-fit: cover;">
                                         </div>
                                         <div class="desc-pembelian">
-                                            <p class="mb-3" style="font-weight: 700;">{{ $item->produk->nama ?? 'Tidak Ada Nama' }}</p>
+                                            <p class="mb-3" style="font-weight: 700;">{{ $item->produk->nama }}</p>
                                             <p class="mb-1"><span style="font-weight: 600;">Jumlah :</span> {{ $item->jumlah }}</p>
                                             <p class="mb-1"><span style="font-weight: 600;">Harga Satuan :</span> Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                             <p class="mb-0"><span style="font-weight: 600;">Total :</span>
@@ -307,7 +307,7 @@
 
                                         <!-- Informasi Produk -->
                                         <div class="desc-pembelian">
-                                            <p class="mb-3" style="font-weight: 700;">{{ $item->produk->nama ?? 'Tidak Ada Nama' }}</p>
+                                            <p class="mb-3" style="font-weight: 700;">{{ $item->produk->nama }}</p>
                                             <p class="mb-1"><span style="font-weight: 600;">Jumlah :</span> {{ $item->jumlah }}</p>
                                             <p class="mb-1"><span style="font-weight: 600;">Harga Satuan</span> : Rp {{ number_format($item->harga, 0, ',', '.') }}</p>
                                             <p class="mb-0"><span style="font-weight: 600;">Total :</span> <span style="color: #007bff;">Rp {{ number_format($item->harga * $item->jumlah, 0, ',', '.') }}</span></p>

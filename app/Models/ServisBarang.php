@@ -37,7 +37,7 @@ class ServisBarang extends Model
     // Relasi dengan User (Opsional, jika ada hubungan dengan tabel users)
     public function user()
     {
-        return $this->belongsTo(user::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function petugas()

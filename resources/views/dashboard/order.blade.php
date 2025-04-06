@@ -56,7 +56,7 @@
                                 </td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn-outline btn-outline-primary btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editStatusModal" data-id="{{ $order->id }}" data-status="{{ $order->status }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

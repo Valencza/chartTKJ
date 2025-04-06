@@ -44,9 +44,9 @@
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center">
                                     <div class="d-flex align-items-center">
-                                        <a class="d-block overlay me-3" data-fslightbox="lightbox-basic" href="{{ asset('storage/' . $produk->gambar) }}">
+                                        <a class="d-block overlay me-3" data-fslightbox="lightbox-basic" href="{{ asset($produk->gambar) }}">
                                             <div class="symbol symbol-50px">
-                                                <img src="{{ asset('storage/' . $produk->gambar) }}" alt="Gambar Produk" class="img-fluid" style="max-width: 50px;">
+                                                <img src="{{ asset($produk->gambar) }}" alt="Gambar Produk" class="img-fluid" style="max-width: 50px;">
                                             </div>
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white"></i>
@@ -64,7 +64,7 @@
                                         data-bs-target="#editStokModal"
                                         data-id="{{ $produk->id }}"
                                         data-stok="{{ $produk->stok_in }}">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                 </td>
                             </tr>

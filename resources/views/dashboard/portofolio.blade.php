@@ -66,7 +66,7 @@
                                 <td>{{ $portofolio->detail ?? '-' }}</td>
                                 <td class="text-end text-nowrap">
                                     <button class="btn btn-icon btn btn-outline btn-outline-primary btn-active-light-primary btn-sm btn-edit" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit" data-bs-target="#editPortofolioModal" data-bs-toggle="modal">
-                                        <i class="ki-duotone ki-pencil fs-2"></i>
+                                        <i class="fas fa-pen fs-2"></i>
                                     </button>
                                     <button class="btn btn-icon btn btn-outline btn-outline-danger btn-active-light-danger btn-sm"
                                         data-kt-permissions-table-filter="delete_row"
@@ -74,7 +74,7 @@
                                         data-bs-toggle="tooltip"
                                         data-bs-placement="bottom"
                                         title="Hapus">
-                                        <i class="ki-duotone ki-trash fs-2"></i>
+                                        <i class="fas fa-trash-alt fs-2"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -180,7 +180,7 @@
                         @if ($portofolio->gambar)
                         <div class="mt-2">
                             <strong>Gambar Saat Ini:</strong>
-                            <img src="{{ asset('storage/' . $portofolio->gambar) }}" alt="Current Image" class="img-fluid" style="max-width: 200px;">
+                            <img src="{{ asset($portofolio->gambar) }}" alt="Current Image" class="img-fluid" style="max-width: 200px;">
                         </div>
                         @endif
                     </div>

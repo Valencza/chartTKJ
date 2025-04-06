@@ -30,16 +30,16 @@
                     <button type="submit" id="loginButton" class="btn btn-primary w-100 mb-2 rounded-pill">Masuk</button>
                 </form>
                 <!-- Tombol Masuk dengan Google -->
-                    <div class="google-login d-flex align-items-center justify-content-center py-2 mt-3 mb-2 rounded-pill">
-                        <a href="{{route ('google') }}" style="text-decoration: none; display: flex; align-items: center; color: inherit;">
-                            <img src="{{asset ('assets/user/img/digireads-assets/google logo.svg') }}" class="img-fluid" alt="Google Logo" 
-                                style="width: 20px; height: 20px; margin-right: 10px;">
-                            <span>Masuk dengan Google</span>
-                        </a>
-                    </div>
-                    <div class="text-center mt-3">
-                        <p class="text-secondary akun">Belum punya akun ? <a href="{{route ('formRegister') }}" class="text-primary">Daftar dulu</a></p>
-                    </div>
+                <div class="google-login d-flex align-items-center justify-content-center py-2 mt-3 mb-2 rounded-pill">
+                    <a href="{{route ('google') }}" style="text-decoration: none; display: flex; align-items: center; color: inherit;">
+                        <img src="{{asset ('assets/user/img/digireads-assets/google logo.svg') }}" class="img-fluid" alt="Google Logo"
+                            style="width: 20px; height: 20px; margin-right: 10px;">
+                        <span>Masuk dengan Google</span>
+                    </a>
+                </div>
+                <div class="text-center mt-3">
+                    <p class="text-secondary akun">Belum punya akun ? <a href="{{route ('formRegister') }}" class="text-primary">Daftar dulu</a></p>
+                </div>
             </div>
         </div>
         <div class="col-xxl-6 col-lg-6 illustration text-center">
@@ -48,7 +48,7 @@
     </div>
 </div>
 
-  <!-- <script>
+<!-- <script>
     document.addEventListener("DOMContentLoaded", function () {
       const loginForm = document.querySelector('form');
       loginForm.addEventListener('submit', function (event) {

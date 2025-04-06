@@ -154,12 +154,10 @@
           <div class="card py-lg-4 px-lg-5 py-4 px-4">
             <div class="row">
               <div class="col-lg-4 col-md-6 text-center mb-lg-0 mb-md-4 mb-5">
-                <h5 class="">Filter Ulasan</h5>
+                <h5 class="">Kirim Ulasan</h5>
+                <h5 class="">Untuk Produk Ini</h5>
                 <!-- Filter untuk ulasan -->
-                <div class="mb-3">
-                  <label for="filterRating" class="form-label text-secondary">Filter Rating Ulasan Pelanggan</label>
-                </div>
-                <button class="btn btn-primary rounded-pill px-4 mt-1" data-bs-toggle="modal" data-bs-target="#writeReviewModal" style="font-weight: 500;padding: 10px 0px;">Tulis Ulasan</button>
+                <button class="btn btn-primary rounded-pill px-4 mt-3" data-bs-toggle="modal" data-bs-target="#writeReviewModal" style="font-weight: 500;padding: 10px 0px;">Tulis Ulasan</button>
               </div>
               <div class="col-lg-4 col-md-6 text-center mb-lg-0 mb-md-4 mb-4">
                 <h5 class="">Rating Barang</h5>
@@ -429,68 +427,84 @@
     });
   }
 
-document.getElementById('submitUlasan').addEventListener('click', function(event) {
-  event.preventDefault();
+  document.getElementById('submitUlasan').addEventListener('click', function(event) {
+    console.log('Button clicked'); // Debugging
 
-  const reviewForm = document.getElementById('reviewForm');
-  const formData = new FormData(reviewForm);
+    event.preventDefault();
+    console.log('Form submission prevented'); // Cek apakah event preventDefault bekerja
 
-  const ratingValue = document.getElementById('rating').value;
-  const deskripsiValue = document.getElementById('deskripsi').value.trim();
+    const reviewForm = document.getElementById('reviewForm');
+    const formData = new FormData(reviewForm);
 
-  if (deskripsiValue && ratingValue > 0) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Konfirmasi Pengiriman',
-      text: 'Apakah Anda yakin ingin mengirim ulasan ini?',
-      showCancelButton: true,
-      confirmButtonText: 'Kirim',
-      cancelButtonText: 'Batal',
-      customClass: {
-        confirmButton: 'btn btn-primary',
-        cancelButton: 'btn btn-secondary'
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        fetch(reviewForm.action, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-            'Accept': 'application/json'
-          }
-        })
-        .then(response => response.json())
-        .then(data => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Berhasil!',
-            text: data.message || 'Ulasan Anda telah terkirim.',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            location.reload(); // ⬅️ Halaman akan reload setelah user klik OK
-          });
-        })
-        .catch(error => {
-          console.error('Error:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Terjadi kesalahan saat mengirim ulasan.',
-            confirmButtonText: 'OK'
-          });
-        });
-      }
-    });
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops...',
-      text: 'Pastikan Anda memberikan rating dan ulasan.',
-      confirmButtonText: 'OK'
-    });
-  }
-});
+    console.log('Rating:', formData.get('rating'));
+    console.log('Deskripsi:', formData.get('deskripsi'));
+
+    if (document.getElementById('deskripsi').value.trim() && document.getElementById('rating').value > 0) {
+      console.log('Data valid, menampilkan SweetAlert');
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Konfirmasi Pengiriman',
+        text: 'Apakah Anda yakin ingin mengirim ulasan ini?',
+        showCancelButton: true,
+        confirmButtonText: 'Kirim',
+        cancelButtonText: 'Batal',
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-secondary'
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log('User confirmed submission');
+
+          fetch(reviewForm.action, {
+              method: 'POST',
+              body: formData,
+              headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+              }
+            })
+            .then(response => response.json())
+            .then(data => {
+              console.log('Response:', data);
+
+              Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: data.message || 'Ulasan Anda telah terkirim.',
+                confirmButtonText: 'OK'
+              }).then(() => {
+                reviewForm.reset();
+                rating = 0;
+                updateStars();
+                $('#writeReviewModal').modal('hide');
+              });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Terjadi kesalahan saat mengirim ulasan.',
+                confirmButtonText: 'OK'
+              });
+            });
+        } else {
+          console.log('User canceled submission');
+        }
+      });
+    } else {
+      console.log('Form tidak valid, menampilkan pesan error');
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Pastikan Anda memberikan rating dan ulasan.',
+        confirmButtonText: 'OK'
+      });
+    }
+  });
 
 
   $('#writeReviewModal').on('hidden.bs.modal', function() {
