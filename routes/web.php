@@ -121,7 +121,6 @@ Route::post('/pengaturan-akun', [ProfileController::class, 'update'])->name('pen
 Route::get('/alamat/get', [AlamatController::class, 'getAlamat'])->name('alamat.get');
 Route::post('/alamat', [AlamatController::class, 'store'])->name('alamat.store');
 
-
 //home.portofolio
 
 Route::get('/portofolio', [PortofolioController::class, 'display'])->name('portfolio');
